@@ -1,0 +1,186 @@
+package br.com.falves.domain;
+
+public enum EspeciePokemon {
+    BULBASAUR(TipoPokemon.Grama),
+    IVYSAUR(TipoPokemon.Grama),
+    VENUSAUR(TipoPokemon.Grama),
+
+    CHARMANDER(TipoPokemon.Fogo),
+    CHARMELEON(TipoPokemon.Fogo),
+    CHARIZARD(TipoPokemon.Fogo),
+
+    SQUIRTLE(TipoPokemon.Agua),
+    WARTORTLE(TipoPokemon.Agua),
+    BLASTOISE(TipoPokemon.Agua),
+
+    CATERPIE(TipoPokemon.Inseto),
+    METAPOD(TipoPokemon.Inseto),
+    BUTTERFREE(TipoPokemon.Inseto),
+    WEEDLE(TipoPokemon.Inseto),
+    KAKUNA(TipoPokemon.Inseto),
+    BEEDRILL(TipoPokemon.Inseto),
+
+    PIDGEY(TipoPokemon.Normal),
+    PIDGEOTTO(TipoPokemon.Normal),
+    PIDGEOT(TipoPokemon.Normal),
+    RATTATA(TipoPokemon.Normal),
+    RATICATE(TipoPokemon.Normal),
+    SPEAROW(TipoPokemon.Normal),
+    FEAROW(TipoPokemon.Normal),
+
+    EKANS(TipoPokemon.Venenoso),
+    ARBOK(TipoPokemon.Venenoso),
+    PIKACHU(TipoPokemon.Eletrico),
+    RAICHU(TipoPokemon.Eletrico),
+    SANDSHREW(TipoPokemon.Terrestre),
+    SANDSLASH(TipoPokemon.Terrestre),
+
+    NIDORAN_F(TipoPokemon.Venenoso),
+    NIDORINA(TipoPokemon.Venenoso),
+    NIDOQUEEN(TipoPokemon.Venenoso),
+    NIDORAN_M(TipoPokemon.Venenoso),
+    NIDORINO(TipoPokemon.Venenoso),
+    NIDOKING(TipoPokemon.Venenoso),
+
+    CLEFAIRY(TipoPokemon.Fada),
+    CLEFABLE(TipoPokemon.Fada),
+    VULPIX(TipoPokemon.Fogo),
+    NINETALES(TipoPokemon.Fogo),
+    JIGGLYPUFF(TipoPokemon.Fada),
+    WIGGLYTUFF(TipoPokemon.Fada),
+
+    ZUBAT(TipoPokemon.Venenoso),
+    GOLBAT(TipoPokemon.Venenoso),
+    ODDISH(TipoPokemon.Grama),
+    GLOOM(TipoPokemon.Grama),
+    VILEPLUME(TipoPokemon.Grama),
+    PARAS(TipoPokemon.Inseto),
+    PARASECT(TipoPokemon.Inseto),
+    VENONAT(TipoPokemon.Inseto),
+    VENOMOTH(TipoPokemon.Inseto),
+    DIGLETT(TipoPokemon.Terrestre),
+    DUGTRIO(TipoPokemon.Terrestre),
+
+    MEOWTH(TipoPokemon.Normal),
+    PERSIAN(TipoPokemon.Normal),
+    PSYDUCK(TipoPokemon.Agua),
+    GOLDUCK(TipoPokemon.Agua),
+    MANKEY(TipoPokemon.Lutador),
+    PRIMEAPE(TipoPokemon.Lutador),
+    GROWLITHE(TipoPokemon.Fogo),
+    ARCANINE(TipoPokemon.Fogo),
+    POLIWAG(TipoPokemon.Agua),
+    POLIWHIRL(TipoPokemon.Agua),
+    POLIWRATH(TipoPokemon.Lutador),
+
+    ABRA(TipoPokemon.Psiquico),
+    KADABRA(TipoPokemon.Psiquico),
+    ALAKAZAM(TipoPokemon.Psiquico),
+    MACHOP(TipoPokemon.Lutador),
+    MACHOKE(TipoPokemon.Lutador),
+    MACHAMP(TipoPokemon.Lutador),
+    BELLSPROUT(TipoPokemon.Grama),
+    WEEPINBELL(TipoPokemon.Grama),
+    VICTREEBEL(TipoPokemon.Grama),
+
+    TENTACOOL(TipoPokemon.Agua),
+    TENTACRUEL(TipoPokemon.Agua),
+    GEODUDE(TipoPokemon.Pedra),
+    GRAVELER(TipoPokemon.Pedra),
+    GOLEM(TipoPokemon.Pedra),
+    PONYTA(TipoPokemon.Fogo),
+    RAPIDASH(TipoPokemon.Fogo),
+    SLOWPOKE(TipoPokemon.Agua),
+    SLOWBRO(TipoPokemon.Agua),
+
+    MAGNEMITE(TipoPokemon.Eletrico),
+    MAGNETON(TipoPokemon.Eletrico),
+    FARFETCHD(TipoPokemon.Normal),
+    DODUO(TipoPokemon.Normal),
+    DODRIO(TipoPokemon.Normal),
+    SEEL(TipoPokemon.Agua),
+    DEWGONG(TipoPokemon.Agua),
+    GRIMER(TipoPokemon.Venenoso),
+    MUK(TipoPokemon.Venenoso),
+    SHELLDER(TipoPokemon.Agua),
+    CLOYSTER(TipoPokemon.Agua),
+
+    GASTLY(TipoPokemon.Fantasma),
+    HAUNTER(TipoPokemon.Fantasma),
+    GENGAR(TipoPokemon.Fantasma),
+    ONIX(TipoPokemon.Pedra),
+    DROWZEE(TipoPokemon.Psiquico),
+    HYPNO(TipoPokemon.Psiquico),
+    KRABBY(TipoPokemon.Agua),
+    KINGLER(TipoPokemon.Agua),
+    VOLTORB(TipoPokemon.Eletrico),
+    ELECTRODE(TipoPokemon.Eletrico),
+
+    EXEGGCUTE(TipoPokemon.Grama),
+    EXEGGUTOR(TipoPokemon.Grama),
+    CUBONE(TipoPokemon.Terrestre),
+    MAROWAK(TipoPokemon.Terrestre),
+
+    HITMONLEE(TipoPokemon.Lutador),
+    HITMONCHAN(TipoPokemon.Lutador),
+    LICKITUNG(TipoPokemon.Normal),
+    KOFFING(TipoPokemon.Venenoso),
+    WEEZING(TipoPokemon.Venenoso),
+    RHYHORN(TipoPokemon.Terrestre),
+    RHYDON(TipoPokemon.Terrestre),
+    CHANSEY(TipoPokemon.Normal),
+    TANGELA(TipoPokemon.Grama),
+    KANGASKHAN(TipoPokemon.Normal),
+
+    HORSEA(TipoPokemon.Agua),
+    SEADRA(TipoPokemon.Agua),
+    GOLDEEN(TipoPokemon.Agua),
+    SEAKING(TipoPokemon.Agua),
+    STARYU(TipoPokemon.Agua),
+    STARMIE(TipoPokemon.Agua),
+
+    MR_MIME(TipoPokemon.Psiquico),
+    SCYTHER(TipoPokemon.Inseto),
+    JYNX(TipoPokemon.Gelo),
+    ELECTABUZZ(TipoPokemon.Eletrico),
+    MAGMAR(TipoPokemon.Fogo),
+    PINSIR(TipoPokemon.Inseto),
+    TAUROS(TipoPokemon.Normal),
+    MAGIKARP(TipoPokemon.Agua),
+    GYARADOS(TipoPokemon.Agua),
+    LAPRAS(TipoPokemon.Agua),
+    DITTO(TipoPokemon.Normal),
+
+    EEVEE(TipoPokemon.Normal),
+    VAPOREON(TipoPokemon.Agua),
+    JOLTEON(TipoPokemon.Eletrico),
+    FLAREON(TipoPokemon.Fogo),
+
+    PORYGON(TipoPokemon.Normal),
+    OMANYTE(TipoPokemon.Pedra),
+    OMASTAR(TipoPokemon.Pedra),
+    KABUTO(TipoPokemon.Pedra),
+    KABUTOPS(TipoPokemon.Pedra),
+    AERODACTYL(TipoPokemon.Pedra),
+    SNORLAX(TipoPokemon.Normal),
+
+    ARTICUNO(TipoPokemon.Gelo),
+    ZAPDOS(TipoPokemon.Eletrico),
+    MOLTRES(TipoPokemon.Fogo),
+
+    DRATINI(TipoPokemon.Dragao),
+    DRAGONAIR(TipoPokemon.Dragao),
+    DRAGONITE(TipoPokemon.Dragao),
+    MEWTWO(TipoPokemon.Psiquico),
+    MEW(TipoPokemon.Psiquico);
+
+    private final TipoPokemon tipo;
+
+    EspeciePokemon(TipoPokemon tipo) {
+        this.tipo = tipo;
+    }
+
+    public TipoPokemon getTipo() {
+        return tipo;
+    }
+}
