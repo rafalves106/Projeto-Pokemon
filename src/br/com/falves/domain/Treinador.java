@@ -63,13 +63,59 @@ public class Treinador {
         this.equipe = equipe;
     }
 
-    public Treinador(Long id, String nome, Regioes regiao, Integer idade, Integer insignias) {
-        this.id = id;
-        this.nome = nome;
-        this.regiao = regiao;
-        this.idade = idade;
-        this.insignias = insignias;
-        this.equipe = new ArrayList<>();
+    public Treinador(TreinadorBuilder treinadorBuilder) {
+        this.id = treinadorBuilder.id;
+        this.nome = treinadorBuilder.nome;
+        this.regiao = treinadorBuilder.regiao;
+        this.idade = treinadorBuilder.idade;
+        this.insignias = treinadorBuilder.insignias;
+        this.equipe = treinadorBuilder.equipe;
+    }
+
+    public static class TreinadorBuilder{
+        private Long id;
+        private String nome;
+        private Regioes regiao;
+        private Integer idade, insignias;
+        private List<Pokemon> equipe;
+
+        public TreinadorBuilder id(Long id){
+            this.id = id;
+            return this;
+        }
+
+        public TreinadorBuilder nome(String nome){
+            this.nome = nome;
+            return this;
+        }
+
+        public TreinadorBuilder regiao(Regioes regiao){
+            this.regiao = regiao;
+            return this;
+        }
+
+        public TreinadorBuilder idade(Integer idade){
+            this.idade = idade;
+            return this;
+        }
+
+        public TreinadorBuilder insignias(Integer insignias){
+            this.insignias = insignias;
+            return this;
+        }
+
+        public TreinadorBuilder equipe(){
+            this.equipe = new ArrayList<>();
+            return this;
+        }
+
+        public Treinador build(){
+            return new Treinador(this);
+        }
+    }
+
+    public static TreinadorBuilder builder(){
+        return new TreinadorBuilder();
     }
 
     @Override

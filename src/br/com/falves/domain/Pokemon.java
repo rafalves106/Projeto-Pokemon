@@ -43,11 +43,46 @@ public class Pokemon {
         this.treinador = treinador;
     }
 
-    public Pokemon(Long numero, EspeciePokemon especiePokemon, Integer nivel) {
-        this.numero = numero;
-        this.especiePokemon = especiePokemon;
-        this.nivel = nivel;
-        this.treinador = null;
+    public Pokemon(PokemonBuilder pokemonBuilder) {
+        this.numero = pokemonBuilder.numero;
+        this.especiePokemon = pokemonBuilder.especie;
+        this.nivel = pokemonBuilder.nivel;
+        this.treinador = pokemonBuilder.treinador;
+    }
+
+    public static class PokemonBuilder{
+        private Long numero;
+        private EspeciePokemon especie;
+        private Integer nivel;
+        private Treinador treinador;
+
+        public PokemonBuilder numero(Long numero){
+            this.numero = numero;
+            return this;
+        }
+
+        public PokemonBuilder especie(EspeciePokemon especie){
+            this.especie = especie;
+            return this;
+        }
+
+        public PokemonBuilder nivel(Integer nivel){
+            this.nivel = nivel;
+            return this;
+        }
+
+        public PokemonBuilder treinador(Treinador treinador){
+            this.treinador = treinador;
+            return this;
+        }
+
+        public Pokemon build(){
+            return new Pokemon(this);
+        }
+    }
+
+    public static PokemonBuilder builder(){
+        return new PokemonBuilder();
     }
 
     @Override

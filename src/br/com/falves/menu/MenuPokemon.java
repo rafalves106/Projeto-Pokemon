@@ -48,12 +48,15 @@ public class MenuPokemon {
             }
 
             Long num = Long.parseLong(dadosSeparados[0]);
-            String especieStr = dadosSeparados[1].trim();
+            String especieStr = dadosSeparados[1].trim().toUpperCase();
+            EspeciePokemon especie = EspeciePokemon.valueOf(especieStr);
             Integer nivel = Integer.parseInt(dadosSeparados[2]);
-            String especieFormatado = especieStr.toUpperCase();
 
-            EspeciePokemon especie = EspeciePokemon.valueOf(especieFormatado);
-            Pokemon pokemon = new Pokemon(num, especie, nivel);
+            Pokemon pokemon = Pokemon.builder()
+                    .numero(num)
+                    .especie(especie)
+                    .nivel(nivel)
+                    .build();
 
             Boolean isCadastrado = iPokemonDAO.cadastrar(pokemon);
 
@@ -136,16 +139,21 @@ public class MenuPokemon {
             }
 
             Long numOriginal = pokemon.getNumero();
-            String especieStr = dadosSeparados[0].trim();
+            String especieStr = dadosSeparados[0].trim().toUpperCase();
+            EspeciePokemon especie = EspeciePokemon.valueOf(especieStr);
             Integer nivel = Integer.parseInt(dadosSeparados[1].trim());
-            EspeciePokemon especie = EspeciePokemon.valueOf(especieStr.toUpperCase());
 
             Pokemon pokemonAntigo = iPokemonDAO.consultar(numOriginal);
-            if (pokemonAntigo != null && pokemonAntigo.getTreinador() != null) {
+            if (pokemonAntigo.getTreinador() != null) {
                 pokemon.setTreinador(pokemonAntigo.getTreinador());
             }
 
-            Pokemon pokemonAlterado = new Pokemon(numOriginal, especie, nivel);
+            Pokemon pokemonAlterado = Pokemon.builder()
+                    .numero(numOriginal)
+                    .especie(especie)
+                    .nivel(nivel)
+                    .build();
+
             iPokemonDAO.alterar(pokemonAlterado);
 
             JOptionPane.showMessageDialog(null, "Dados atualizados com sucesso!");

@@ -47,7 +47,14 @@ public class MenuTreinador {
 
             Regioes regiaoFormatada = Regioes.valueOf(regiao.toUpperCase());
 
-            Treinador treinador = new Treinador(id, nome, regiaoFormatada, idade, insignias);
+            Treinador treinador = Treinador.builder()
+                    .id(id)
+                    .nome(nome)
+                    .regiao(regiaoFormatada)
+                    .idade(idade)
+                    .insignias(insignias)
+                    .equipe()
+                    .build();
 
             Boolean isCadastrado = iTreinadorDAO.cadastrar(treinador);
 
@@ -151,8 +158,15 @@ public class MenuTreinador {
 
             Regioes regiaoFormatada = Regioes.valueOf(regiao.toUpperCase());
 
-            Treinador treinadorEditado = new Treinador(idOriginal, nome, regiaoFormatada, idade, insignias);
-            if(treinador.getRegiao() != null){
+            Treinador treinadorEditado = Treinador.builder()
+                    .id(idOriginal)
+                    .nome(nome)
+                    .regiao(regiaoFormatada)
+                    .idade(idade)
+                    .insignias(insignias)
+                    .build();
+
+            if(treinador.getEquipe() != null){
                 treinadorEditado.setEquipe(treinador.getEquipe());
             }
 
