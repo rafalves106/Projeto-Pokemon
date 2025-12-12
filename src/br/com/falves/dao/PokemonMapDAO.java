@@ -48,7 +48,6 @@ public class PokemonMapDAO implements IPokemonDAO{
         pokemonCadastrado.setNivel(pokemon.getNivel());
     }
 
-
     @Override
     public Pokemon consultar(Long numero) {
         return this.map.get(numero);

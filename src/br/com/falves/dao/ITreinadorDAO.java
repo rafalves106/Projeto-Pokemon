@@ -12,7 +12,13 @@ public interface ITreinadorDAO {
 
     public void alterar(Treinador treinador);
 
-    public void adicionarPokemon(Pokemon pokemon, Treinador treinador);
+    public void adicionarAoTime(Pokemon pokemon, Treinador treinador);
+
+    public void removerDoTime(Pokemon pokemon, Treinador treinador);
+
+    public void adicionarNaBox(Pokemon pokemon, Treinador treinador);
+
+    public void removerDaBox(Pokemon pokemon, Treinador treinador);
 
     public Treinador consultar(Long id);
 

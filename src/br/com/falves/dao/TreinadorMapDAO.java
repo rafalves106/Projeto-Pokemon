@@ -56,13 +56,41 @@ public class TreinadorMapDAO implements ITreinadorDAO{
     }
 
     @Override
-    public void adicionarPokemon(Pokemon pokemon, Treinador treinador) {
+    public void adicionarAoTime(Pokemon pokemon, Treinador treinador) {
+        Treinador treinadorCadastrado = map.get(treinador.getId());
+
+            if (treinadorCadastrado != null) {
+                treinadorCadastrado.getEquipe().add(pokemon);
+        }
+    }
+
+    @Override
+    public void removerDoTime(Pokemon pokemon, Treinador treinador) {
         Treinador treinadorCadastrado = map.get(treinador.getId());
 
         if (treinadorCadastrado != null) {
-            treinadorCadastrado.getEquipe().add(pokemon);
+            treinadorCadastrado.getEquipe().remove(pokemon);
         }
     }
+
+    @Override
+    public void adicionarNaBox(Pokemon pokemon, Treinador treinador) {
+        Treinador treinadorCadastrado = map.get(treinador.getId());
+
+        if (treinadorCadastrado != null) {
+            treinadorCadastrado.getBox().add(pokemon);
+        }
+    }
+
+    @Override
+    public void removerDaBox(Pokemon pokemon, Treinador treinador) {
+        Treinador treinadorCadastrado = map.get(treinador.getId());
+
+        if (treinadorCadastrado != null) {
+            treinadorCadastrado.getBox().remove(pokemon);
+        }
+    }
+
 
     @Override
     public Treinador consultar(Long id) {

@@ -4,6 +4,7 @@
 
 package br.com.falves.menu;
 
+import br.com.falves.builder.PokemonBuilder;
 import br.com.falves.dao.IPokemonDAO;
 import br.com.falves.dao.PokemonMapDAO;
 import br.com.falves.domain.EspeciePokemon;
@@ -11,6 +12,7 @@ import br.com.falves.domain.Pokemon;
 import br.com.falves.domain.TipoPokemon;
 
 import javax.swing.*;
+import java.util.Arrays;
 
 public class MenuPokemon {
     IPokemonDAO iPokemonDAO = PokemonMapDAO.getInstance();
@@ -70,7 +72,7 @@ public class MenuPokemon {
         } catch (NumberFormatException e){
             JOptionPane.showMessageDialog(null, "Erro no campo numérico número).", "Erro", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e){
-            JOptionPane.showMessageDialog(null, "Erro inesperado: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);JOptionPane.showMessageDialog(null, "Erro inesperado: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Erro inesperado: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -143,16 +145,18 @@ public class MenuPokemon {
             EspeciePokemon especie = EspeciePokemon.valueOf(especieStr);
             Integer nivel = Integer.parseInt(dadosSeparados[1].trim());
 
-            Pokemon pokemonAntigo = iPokemonDAO.consultar(numOriginal);
-            if (pokemonAntigo.getTreinador() != null) {
-                pokemon.setTreinador(pokemonAntigo.getTreinador());
-            }
-
-            Pokemon pokemonAlterado = Pokemon.builder()
+            PokemonBuilder builder = Pokemon.builder()
                     .numero(numOriginal)
                     .especie(especie)
-                    .nivel(nivel)
-                    .build();
+                    .nivel(nivel);
+
+            Pokemon pokemonAntigo = iPokemonDAO.consultar(numOriginal);
+
+            if (pokemonAntigo != null && pokemonAntigo.getTreinador() != null) {
+                builder.setTreinador(pokemonAntigo.getTreinador());
+            }
+
+            Pokemon pokemonAlterado = builder.build();
 
             iPokemonDAO.alterar(pokemonAlterado);
 
@@ -188,10 +192,7 @@ public class MenuPokemon {
         StringBuilder sb = new StringBuilder();
         sb.append("Listando todos os Pokémons: \n");
 
-        for (Pokemon pokemon : iPokemonDAO.buscarTodos()){
-            sb.append(pokemon.toString());
-            sb.append("\n");
-        }
+        iPokemonDAO.buscarTodos().forEach(pokemon -> sb.append(pokemon.toString()).append("\n"));
 
         JOptionPane.showMessageDialog(null, sb.toString());
     }
@@ -211,11 +212,7 @@ public class MenuPokemon {
             sb.append("Listando todos os Pokémons de nível ").append(nivelMinimo).append(" ou maior: \n");
 
             if (nivelMinimo >= 1 && nivelMinimo <= 100){
-                for (Pokemon pokemon : iPokemonDAO.buscarPorNivel(nivelMinimo)){
-                    sb.append(pokemon.toString());
-                    sb.append("\n");
-                }
-
+                iPokemonDAO.buscarPorNivel(nivelMinimo).forEach(p -> sb.append(p.toString()).append("\n"));
                 JOptionPane.showMessageDialog(null, sb.toString());
             } else {
                 JOptionPane.showMessageDialog(null, "Nível inválido! Tente novamente.", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -243,10 +240,7 @@ public class MenuPokemon {
             StringBuilder sb = new StringBuilder();
             sb.append("Listando todos os Pokémons da espécie: ").append(especieStr).append("\n");
 
-            for (Pokemon pokemon : iPokemonDAO.buscarPorEspecie(EspeciePokemon.valueOf(especieStr))){
-                sb.append(pokemon.toString());
-                sb.append("\n");
-            }
+            iPokemonDAO.buscarPorEspecie(EspeciePokemon.valueOf(especieStr)).forEach(p -> sb.append(p.toString()).append("\n"));
 
             JOptionPane.showMessageDialog(null, sb.toString());
 
@@ -276,10 +270,7 @@ public class MenuPokemon {
             StringBuilder sb = new StringBuilder();
             sb.append("Listando todos os Pokémons do tipo: ").append(tipoFormatado).append("\n");
 
-            for (Pokemon pokemon : iPokemonDAO.buscarPorTipo(TipoPokemon.valueOf(tipoFormatado))){
-                sb.append(pokemon.toString());
-                sb.append("\n");
-            }
+            iPokemonDAO.buscarPorTipo(TipoPokemon.valueOf(tipoFormatado)).forEach(p -> sb.append(p.toString()).append("\n"));
 
             JOptionPane.showMessageDialog(null, sb.toString());
 
@@ -293,6 +284,7 @@ public class MenuPokemon {
     private static void listarEspecies(){
         StringBuilder listarEspecies = new StringBuilder();
         int contador = 0;
+
         for (EspeciePokemon especiePokemon : EspeciePokemon.values()){
             listarEspecies.append(especiePokemon).append(" | ");
             contador++;

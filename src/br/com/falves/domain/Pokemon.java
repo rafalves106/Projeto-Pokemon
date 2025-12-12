@@ -3,6 +3,8 @@
  */
 
 package br.com.falves.domain;
+import br.com.falves.builder.PokemonBuilder;
+
 import java.util.Objects;
 
 public class Pokemon {
@@ -44,41 +46,10 @@ public class Pokemon {
     }
 
     public Pokemon(PokemonBuilder pokemonBuilder) {
-        this.numero = pokemonBuilder.numero;
-        this.especiePokemon = pokemonBuilder.especie;
-        this.nivel = pokemonBuilder.nivel;
-        this.treinador = pokemonBuilder.treinador;
-    }
-
-    public static class PokemonBuilder{
-        private Long numero;
-        private EspeciePokemon especie;
-        private Integer nivel;
-        private Treinador treinador;
-
-        public PokemonBuilder numero(Long numero){
-            this.numero = numero;
-            return this;
-        }
-
-        public PokemonBuilder especie(EspeciePokemon especie){
-            this.especie = especie;
-            return this;
-        }
-
-        public PokemonBuilder nivel(Integer nivel){
-            this.nivel = nivel;
-            return this;
-        }
-
-        public PokemonBuilder treinador(Treinador treinador){
-            this.treinador = treinador;
-            return this;
-        }
-
-        public Pokemon build(){
-            return new Pokemon(this);
-        }
+        this.numero = pokemonBuilder.getNumero();
+        this.especiePokemon = pokemonBuilder.getEspecie();
+        this.nivel = pokemonBuilder.getNivel();
+        this.treinador = pokemonBuilder.getTreinador();
     }
 
     public static PokemonBuilder builder(){

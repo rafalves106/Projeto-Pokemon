@@ -4,7 +4,8 @@
 
 package br.com.falves.domain;
 
-import java.util.ArrayList;
+import br.com.falves.builder.TreinadorBuilder;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -14,6 +15,7 @@ public class Treinador {
     private Regioes regiao;
     private Integer idade, insignias;
     private List<Pokemon> equipe;
+    private List<Pokemon> box;
 
     public Long getId() {
         return id;
@@ -63,55 +65,22 @@ public class Treinador {
         this.equipe = equipe;
     }
 
-    public Treinador(TreinadorBuilder treinadorBuilder) {
-        this.id = treinadorBuilder.id;
-        this.nome = treinadorBuilder.nome;
-        this.regiao = treinadorBuilder.regiao;
-        this.idade = treinadorBuilder.idade;
-        this.insignias = treinadorBuilder.insignias;
-        this.equipe = treinadorBuilder.equipe;
+    public List<Pokemon> getBox() {
+        return box;
     }
 
-    public static class TreinadorBuilder{
-        private Long id;
-        private String nome;
-        private Regioes regiao;
-        private Integer idade, insignias;
-        private List<Pokemon> equipe;
+    public void setBox(List<Pokemon> box) {
+        this.box = box;
+    }
 
-        public TreinadorBuilder id(Long id){
-            this.id = id;
-            return this;
-        }
-
-        public TreinadorBuilder nome(String nome){
-            this.nome = nome;
-            return this;
-        }
-
-        public TreinadorBuilder regiao(Regioes regiao){
-            this.regiao = regiao;
-            return this;
-        }
-
-        public TreinadorBuilder idade(Integer idade){
-            this.idade = idade;
-            return this;
-        }
-
-        public TreinadorBuilder insignias(Integer insignias){
-            this.insignias = insignias;
-            return this;
-        }
-
-        public TreinadorBuilder equipe(){
-            this.equipe = new ArrayList<>();
-            return this;
-        }
-
-        public Treinador build(){
-            return new Treinador(this);
-        }
+    public Treinador(TreinadorBuilder treinadorBuilder) {
+        this.id = treinadorBuilder.getId();
+        this.nome = treinadorBuilder.getNome();
+        this.regiao = treinadorBuilder.getRegiao();
+        this.idade = treinadorBuilder.getIdade();
+        this.insignias = treinadorBuilder.getInsignias();
+        this.equipe = treinadorBuilder.getEquipe();
+        this.box = treinadorBuilder.getBox();
     }
 
     public static TreinadorBuilder builder(){
@@ -133,14 +102,19 @@ public class Treinador {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        if (equipe.isEmpty()) {
+        if (equipe.isEmpty() && box.isEmpty()) {
             sb.append(" (Sem pokémons)");
-        } else {
+        } else if(!equipe.isEmpty()){
             for(Pokemon pokemon : equipe){
                 sb.append("\n   -> ");
                 sb.append(pokemon.toString());
             }
+        } else if(!box.isEmpty()){
+            for(Pokemon pokemon : box){
+                sb.append("\n   -> ");
+                sb.append(pokemon.toString());
+            }
         }
-        return "ID: " + id + " | Nome: " + nome + " | Região: " + regiao.toString() + "\nTime:" + sb;
+        return "ID: " + id + " | Nome: " + nome + " | Região: " + regiao.toString() + "\nPokémon:" + sb;
     }
 }
