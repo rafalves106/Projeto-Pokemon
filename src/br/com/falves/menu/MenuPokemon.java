@@ -12,7 +12,6 @@ import br.com.falves.domain.Pokemon;
 import br.com.falves.domain.TipoPokemon;
 
 import javax.swing.*;
-import java.util.Arrays;
 
 public class MenuPokemon {
     IPokemonDAO iPokemonDAO = PokemonMapDAO.getInstance();
