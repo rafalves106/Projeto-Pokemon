@@ -169,4 +169,74 @@ public class MenuTreinador {
             JOptionPane.showMessageDialog(null, "Erro ao excluir: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    public void acoesTreinador(){
+        while (true) {
+            String opcaoTreinador = JOptionPane.showInputDialog(null,
+                    "1 -> Adicionar Treinador\n2 -> Editar Treinador\n3 -> Remover Treinador\n4 -> Gerenciar Pokémons\n5 -> Listar Treinadores\n6 -> Voltar",
+                    "Menu - Treinador Pokémon", JOptionPane.INFORMATION_MESSAGE);
+
+            if (opcaoTreinador == null){
+                return;
+            }
+
+            switch (opcaoTreinador) {
+                case "1":
+                    cadastrarTreinador();
+                    break;
+                case "2":
+                    alterarTreinador();
+                    break;
+                case "3":
+                    excluirTreinador();
+                    break;
+                case "4":
+                    gerenciarPokemons();
+                    break;
+                case "5":
+                    listarTreinadores();
+                    break;
+                case "6":
+                    return;
+                default:
+                    JOptionPane.showMessageDialog(null, "Opção inválida! Tente novamente.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    break;
+            }
+        }
+    }
+
+    public void gerenciarPokemons(){
+        while (true) {
+            String opcaoFiltro = JOptionPane.showInputDialog(null,
+                    "1 -> Adicionar ao Time\n2 -> Remover do Time\n3 -> Remover da Box\n4 -> Visualizar Time\n5 -> Visualizar Box\n6 -> Voltar",
+                    "Menu - Gerenciar Pokémons do Treinador", JOptionPane.INFORMATION_MESSAGE);
+
+            if (opcaoFiltro == null) {
+                return;
+            }
+
+            switch (opcaoFiltro) {
+                case "1":
+                    adicionarPokemonAoTime();
+                    break;
+                case "2":
+                    removerPokemonDoTime();
+                    break;
+                case "3":
+                    removerPokemonDaBox();
+                    break;
+                case "4":
+                    visualizarTime();
+                    return;
+                case "5":
+                    visualizarBox();
+                    return;
+                case "6":
+                    return;
+                default:
+                    JOptionPane.showMessageDialog(null, "Opção inválida! Tente novamente.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    break;
+            }
+        }
+    }
 }

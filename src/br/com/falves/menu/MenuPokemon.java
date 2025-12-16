@@ -3,18 +3,13 @@
  */
 
 package br.com.falves.menu;
-
-import br.com.falves.builder.PokemonBuilder;
-import br.com.falves.dao.IPokemonDAO;
-import br.com.falves.dao.PokemonMapDAO;
-import br.com.falves.domain.EspeciePokemon;
 import br.com.falves.domain.Pokemon;
-import br.com.falves.domain.TipoPokemon;
+import br.com.falves.service.PokemonService;
 
 import javax.swing.*;
 
 public class MenuPokemon {
-    IPokemonDAO iPokemonDAO = PokemonMapDAO.getInstance();
+    PokemonService pokemonService = new PokemonService();
 
     public void cadastrarPokemon(){
         String message = "Digite os dados(NÚMERO,ESPÉCIE,NÍVEL) do Pokémon separados por vírgula.\nEX: 1,MOLTRES,60\n*Digite 'LISTAR' para ver todas as espécies*";
@@ -31,48 +26,9 @@ public class MenuPokemon {
                     message, "Cadastro de Pokémon", JOptionPane.INFORMATION_MESSAGE);
 
             if (dados == null) return;
-        };
-
-        try {
-            String[] dadosSeparados = dados.split(",");
-
-            if (dadosSeparados.length < 3){
-                JOptionPane.showMessageDialog(null, "Dados Insuficientes! Padrão: NÚMERO, ESPÉCIE, NÍVEL",
-                        "Erro", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            if (dadosSeparados.length > 3){
-                JOptionPane.showMessageDialog(null, "Dados Excessivos! Padrão: NÚMERO, ESPÉCIE, NÍVEL",
-                        "Erro", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            Long num = Long.parseLong(dadosSeparados[0]);
-            String especieStr = dadosSeparados[1].trim().toUpperCase();
-            EspeciePokemon especie = EspeciePokemon.valueOf(especieStr);
-            Integer nivel = Integer.parseInt(dadosSeparados[2]);
-
-            Pokemon pokemon = Pokemon.builder()
-                    .numero(num)
-                    .especie(especie)
-                    .nivel(nivel)
-                    .build();
-
-            Boolean isCadastrado = iPokemonDAO.cadastrar(pokemon);
-
-            if(isCadastrado) {
-                JOptionPane.showMessageDialog(null, "Pokémon cadastrado com suceso ",
-                        "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(null, "Pokémon já se encontra cadastrado",
-                        "Erro", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (NumberFormatException e){
-            JOptionPane.showMessageDialog(null, "Erro no campo numérico número).", "Erro", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e){
-            JOptionPane.showMessageDialog(null, "Erro inesperado: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
+
+        pokemonService.cadastrarPokemon(dados);
     }
 
     public Pokemon consultarPokemon(){
@@ -86,27 +42,7 @@ public class MenuPokemon {
             return null;
         }
 
-        try {
-            // Transforma o valor inserido em Long
-            Long num = Long.parseLong(numStr);
-
-            // Consulta um Pokémon passando o Long
-            Pokemon pokemon = iPokemonDAO.consultar(num);
-
-            // Se o retorno for nulo, inicializa tela informando
-            if(pokemon == null){
-                JOptionPane.showMessageDialog(null, "Pokemon não encontrado!",
-                        "Aviso", JOptionPane.WARNING_MESSAGE);
-            }
-
-            // Se encontrar um Pokémon, o retorna
-            return pokemon;
-        } catch (NumberFormatException e){
-            // Caso não consiga converter o String para Long, inicializa tela informando e retorna nulo
-            JOptionPane.showMessageDialog(null, "Número inválido! Digite apenas números.",
-                    "Erro", JOptionPane.ERROR_MESSAGE);
-            return null;
-        }
+        return pokemonService.consultarPokemon(numStr);
     }
 
     public void alterarPokemon(){
@@ -121,44 +57,10 @@ public class MenuPokemon {
         String dados = JOptionPane.showInputDialog(null,
                 message, "Edição de Pokémon", JOptionPane.INFORMATION_MESSAGE);
 
-
         if (dados == null) return;
 
         try {
-            String[] dadosSeparados = dados.split(",");
-
-            if(dadosSeparados.length < 2){
-                JOptionPane.showMessageDialog(null, "Informe: ESPÉCIE, NÍVEL",
-                        "Dados Incompletos", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            if(dadosSeparados.length > 2){
-                JOptionPane.showMessageDialog(null, "Informe: ESPÉCIE, NÍVEL",
-                        "Dados Excessivos", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            Long numOriginal = pokemon.getNumero();
-            String especieStr = dadosSeparados[0].trim().toUpperCase();
-            EspeciePokemon especie = EspeciePokemon.valueOf(especieStr);
-            Integer nivel = Integer.parseInt(dadosSeparados[1].trim());
-
-            PokemonBuilder builder = Pokemon.builder()
-                    .numero(numOriginal)
-                    .especie(especie)
-                    .nivel(nivel);
-
-            Pokemon pokemonAntigo = iPokemonDAO.consultar(numOriginal);
-
-            if (pokemonAntigo != null && pokemonAntigo.getTreinador() != null) {
-                builder.setTreinador(pokemonAntigo.getTreinador());
-            }
-
-            Pokemon pokemonAlterado = builder.build();
-
-            iPokemonDAO.alterar(pokemonAlterado);
-
+            pokemonService.editarPokemon(pokemon, dados);
             JOptionPane.showMessageDialog(null, "Dados atualizados com sucesso!");
         } catch (Exception e){
             JOptionPane.showMessageDialog(null, "Erro ao atualizar: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
@@ -166,56 +68,32 @@ public class MenuPokemon {
     }
 
     public void excluirPokemon(){
-        Pokemon pokemonParaExcluir = consultarPokemon();
+        Pokemon pokemon = consultarPokemon();
 
-        if (pokemonParaExcluir == null) {
-            JOptionPane.showMessageDialog(null, "Pokémon não encontrado para exclusão.", "Erro", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        if (pokemon == null) return;
 
-        if (pokemonParaExcluir.getTreinador() != null){
-            JOptionPane.showMessageDialog(null,
-                    "Não é possível excluir: Este Pokémon pertence a " + pokemonParaExcluir.getTreinador().getNome() + ".\nRemova-o da equipe do treinador primeiro.",
-                    "Operação Negada", JOptionPane.WARNING_MESSAGE);
-        } else {
-            try {
-                iPokemonDAO.excluir(pokemonParaExcluir.getNumero());
-                JOptionPane.showMessageDialog(null, "Pokémon excluído com sucesso!");
-            } catch (Exception e){
-                JOptionPane.showMessageDialog(null, "Erro ao excluir: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-            }
+        try {
+            pokemonService.excluirPokemon(pokemon);
+            JOptionPane.showMessageDialog(null, "Pokémon excluído com sucesso!");
+        } catch (Exception e){
+            JOptionPane.showMessageDialog(null, "Erro ao excluir: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     public void listarPokemons(){
-        StringBuilder sb = new StringBuilder();
-        sb.append("Listando todos os Pokémons: \n");
-
-        iPokemonDAO.buscarTodos().forEach(pokemon -> sb.append(pokemon.toString()).append("\n"));
-
-        JOptionPane.showMessageDialog(null, sb.toString());
+        JOptionPane.showMessageDialog(null, pokemonService.listaPokemons());
     }
 
     public void buscarPorNivel(){
-        String message = "Digite o nível MÍNIMO dos Pokémons que deseja ver (1 a 100)";
+        String message = "Digite o NÍVEL MÍNIMO c/s o NÍVEL MÁXIMO dos Pokémons que deseja ver (1 a 100)";
 
-        String nivelStr = JOptionPane.showInputDialog(null,
+        String niveisStr = JOptionPane.showInputDialog(null,
                 message, "Procura de Pokémon por Nível", JOptionPane.INFORMATION_MESSAGE);
 
-        if (nivelStr == null) return;
+        if (niveisStr == null) return;
 
         try {
-            int nivelMinimo = Integer.parseInt(nivelStr.trim());
-
-            StringBuilder sb = new StringBuilder();
-            sb.append("Listando todos os Pokémons de nível ").append(nivelMinimo).append(" ou maior: \n");
-
-            if (nivelMinimo >= 1 && nivelMinimo <= 100){
-                iPokemonDAO.buscarPorNivel(nivelMinimo).forEach(p -> sb.append(p.toString()).append("\n"));
-                JOptionPane.showMessageDialog(null, sb.toString());
-            } else {
-                JOptionPane.showMessageDialog(null, "Nível inválido! Tente novamente.", "Erro", JOptionPane.ERROR_MESSAGE);
-            }
+            JOptionPane.showMessageDialog(null, pokemonService.buscarPorNivel(niveisStr));
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Por favor, digite apenas números válidos.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
@@ -233,16 +111,10 @@ public class MenuPokemon {
             listarEspecies();
             especieStr = JOptionPane.showInputDialog(null, message, "Procura por Espécie", JOptionPane.INFORMATION_MESSAGE);
             if (especieStr == null) return;
-        };
+        }
 
         try {
-            StringBuilder sb = new StringBuilder();
-            sb.append("Listando todos os Pokémons da espécie: ").append(especieStr).append("\n");
-
-            iPokemonDAO.buscarPorEspecie(EspeciePokemon.valueOf(especieStr)).forEach(p -> sb.append(p.toString()).append("\n"));
-
-            JOptionPane.showMessageDialog(null, sb.toString());
-
+            JOptionPane.showMessageDialog(null, pokemonService.buscarPorEspecie(especieStr));
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(null, "Espécie não encontrada! Verifique a digitação ou use 'LISTAR'.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
@@ -260,38 +132,21 @@ public class MenuPokemon {
             listarTipos();
             tipoStr = JOptionPane.showInputDialog(null, message, "Procura por Tipo", JOptionPane.INFORMATION_MESSAGE);
             if (tipoStr == null) return;
-        };
+        }
 
         try {
-            String tipoFormatado = tipoStr.trim().substring(0, 1).toUpperCase() +
-                    tipoStr.trim().substring(1).toLowerCase();
 
-            StringBuilder sb = new StringBuilder();
-            sb.append("Listando todos os Pokémons do tipo: ").append(tipoFormatado).append("\n");
-
-            iPokemonDAO.buscarPorTipo(TipoPokemon.valueOf(tipoFormatado)).forEach(p -> sb.append(p.toString()).append("\n"));
-
-            JOptionPane.showMessageDialog(null, sb.toString());
-
+            JOptionPane.showMessageDialog(null, pokemonService.buscarPorTipo(tipoStr));
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(null, "Tipo não encontrado! Verifique a digitação ou use 'LISTAR'.", "Erro", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao buscar: " + e.getMessage());
+
         }
     }
 
-    private static void listarEspecies(){
-        StringBuilder listarEspecies = new StringBuilder();
-        int contador = 0;
-
-        for (EspeciePokemon especiePokemon : EspeciePokemon.values()){
-            listarEspecies.append(especiePokemon).append(" | ");
-            contador++;
-
-            if (contador % 3 == 0) listarEspecies.append("\n");
-        }
-
-        JTextArea textArea = new JTextArea(listarEspecies.toString());
+    private void listarEspecies(){
+        JTextArea textArea = new JTextArea(pokemonService.listarEspecies());
         textArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(textArea);
         scrollPane.setPreferredSize(new java.awt.Dimension(400, 300));
@@ -300,22 +155,77 @@ public class MenuPokemon {
 
     }
 
-    private static void listarTipos(){
-        StringBuilder listarTipos = new StringBuilder();
-        int contador = 0;
-        for (TipoPokemon tipoPokemon : TipoPokemon.values()){
-            listarTipos.append(tipoPokemon).append(" | ");
-            contador++;
-
-            if (contador % 3 == 0) listarTipos.append("\n");
-        }
-
-        JTextArea textArea = new JTextArea(listarTipos.toString());
+    private void listarTipos(){
+        JTextArea textArea = new JTextArea(pokemonService.listarTipos());
         textArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(textArea);
         scrollPane.setPreferredSize(new java.awt.Dimension(400, 300));
 
         JOptionPane.showMessageDialog(null, scrollPane, "Tipos Disponíveis", JOptionPane.INFORMATION_MESSAGE);
 
+    }
+
+    public void acoesPokemon() {
+        while (true) {
+            String opcaoPokemon = JOptionPane.showInputDialog(null,
+                    "1 -> Adicionar Pokémon\n2 -> Editar Pokémon\n3 -> Remover Pokémon\n4 -> Filtrar Pokémon\n5 -> Listar Pokémons\n6 -> Voltar",
+                    "Menu - Pokémon", JOptionPane.INFORMATION_MESSAGE);
+
+            if (opcaoPokemon == null) {
+                return;
+            }
+
+            switch (opcaoPokemon) {
+                case "1":
+                    cadastrarPokemon();
+                    break;
+                case "2":
+                    alterarPokemon();
+                    break;
+                case "3":
+                    excluirPokemon();
+                    break;
+                case "4":
+                    filtrarPokemon();
+                    break;
+                case "5":
+                    listarPokemons();
+                    break;
+                case "6":
+                    return;
+                default:
+                    JOptionPane.showMessageDialog(null, "Opção inválida! Tente novamente.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    break;
+            }
+        }
+    }
+
+    public void filtrarPokemon(){
+        while (true) {
+            String opcaoFiltro = JOptionPane.showInputDialog(null,
+                    "1 -> Filtrar por Tipo\n2 -> Filtrar por Nível\n3 -> Filtrar por Espécie\n4 -> Voltar",
+                    "Menu - Pokémon", JOptionPane.INFORMATION_MESSAGE);
+
+            if (opcaoFiltro == null) {
+                return;
+            }
+
+            switch (opcaoFiltro) {
+                case "1":
+                    buscarPorTipo();
+                    break;
+                case "2":
+                    buscarPorNivel();
+                    break;
+                case "3":
+                    buscarPorEspecie();
+                    break;
+                case "4":
+                    return;
+                default:
+                    JOptionPane.showMessageDialog(null, "Opção inválida! Tente novamente.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    break;
+            }
+        }
     }
 }
