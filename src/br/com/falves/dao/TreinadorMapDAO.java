@@ -7,6 +7,7 @@ package br.com.falves.dao;
 import br.com.falves.domain.Pokemon;
 import br.com.falves.domain.Treinador;
 
+import javax.swing.*;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
@@ -47,48 +48,30 @@ public class TreinadorMapDAO implements ITreinadorDAO{
     public void alterar(Treinador treinador) {
         Treinador treinadorCadastrado = map.get(treinador.getId());
 
-        if(treinadorCadastrado != null){
-            treinadorCadastrado.setNome(treinador.getNome());
-            treinadorCadastrado.setIdade(treinador.getIdade());
-            treinadorCadastrado.setRegiao(treinador.getRegiao());
-            treinadorCadastrado.setInsignias(treinador.getInsignias());
-        }
+        treinadorCadastrado.setNome(treinador.getNome());
+        treinadorCadastrado.setIdade(treinador.getIdade());
+        treinadorCadastrado.setRegiao(treinador.getRegiao());
+        treinadorCadastrado.setInsignias(treinador.getInsignias());
     }
 
     @Override
     public void adicionarAoTime(Pokemon pokemon, Treinador treinador) {
-        Treinador treinadorCadastrado = map.get(treinador.getId());
-
-            if (treinadorCadastrado != null) {
-                treinadorCadastrado.getEquipe().add(pokemon);
-        }
+        treinador.getEquipe().add(pokemon);
     }
 
     @Override
     public void removerDoTime(Pokemon pokemon, Treinador treinador) {
-        Treinador treinadorCadastrado = map.get(treinador.getId());
-
-        if (treinadorCadastrado != null) {
-            treinadorCadastrado.getEquipe().remove(pokemon);
-        }
+        treinador.getEquipe().remove(pokemon);
     }
 
     @Override
     public void adicionarNaBox(Pokemon pokemon, Treinador treinador) {
-        Treinador treinadorCadastrado = map.get(treinador.getId());
-
-        if (treinadorCadastrado != null) {
-            treinadorCadastrado.getBox().add(pokemon);
-        }
+        treinador.getBox().add(pokemon);
     }
 
     @Override
     public void removerDaBox(Pokemon pokemon, Treinador treinador) {
-        Treinador treinadorCadastrado = map.get(treinador.getId());
-
-        if (treinadorCadastrado != null) {
-            treinadorCadastrado.getBox().remove(pokemon);
-        }
+        treinador.getBox().remove(pokemon);
     }
 
 
