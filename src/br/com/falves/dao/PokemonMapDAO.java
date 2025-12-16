@@ -75,6 +75,15 @@ public class PokemonMapDAO implements IPokemonDAO{
     }
 
     @Override
+    public Collection<Pokemon> buscarPorNivel(int nivelMinimo, int nivelMaximo) {
+        System.out.println(nivelMinimo);
+        return this.map.values().stream()
+                .filter(p -> p.getNivel() >= nivelMinimo && p.getNivel() <= nivelMaximo)
+                .sorted(Comparator.comparing(Pokemon::getNivel))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Collection<Pokemon> buscarPorEspecie(EspeciePokemon especie) {
         return this.map.values().stream()
                 .filter(p -> p.getEspeciePokemon().equals(especie))

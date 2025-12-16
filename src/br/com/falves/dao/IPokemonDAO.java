@@ -21,5 +21,7 @@ public interface IPokemonDAO {
 
     public Collection<Pokemon> buscarPorNivel(int nivelMinimo);
 
+    public Collection<Pokemon> buscarPorNivel(int nivelMinimo, int nivelMaximo);
+
     public Collection<Pokemon> buscarPorEspecie(EspeciePokemon especie);
 }
