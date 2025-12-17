@@ -184,10 +184,10 @@ public class PokemonService {
 
             sb.append("Listando todos os Pokémons do nível ").append(nivelMinimo).append(" ao nível: ").append(nivelMaximo).append("\n");
             pokemonDAO.buscarPorNivel(nivelMinimo, nivelMaximo).forEach(p -> sb.append(p.toString()).append("\n"));
+        } else {
+            sb.append("Listando todos os Pokémons de nível ").append(nivelMinimo).append(" ou maior. \n");
+            pokemonDAO.buscarPorNivel(nivelMinimo).forEach(p -> sb.append(p.toString()).append("\n"));
         }
-
-        sb.append("Listando todos os Pokémons de nível ").append(nivelMinimo).append(" ou maior. \n");
-        pokemonDAO.buscarPorNivel(nivelMinimo).forEach(p -> sb.append(p.toString()).append("\n"));
 
         return sb.toString();
     }

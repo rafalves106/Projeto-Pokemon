@@ -3,9 +3,8 @@
  */
 
 package br.com.falves;
-import br.com.falves.menu.MenuGeral;
 
-import javax.swing.*;
+import br.com.falves.menu.MenuGeral;
 
 public class App {
     private static final MenuGeral menuGeral = new MenuGeral();

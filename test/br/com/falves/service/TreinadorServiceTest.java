@@ -69,7 +69,7 @@ class TreinadorServiceTest {
     }
 
     @Test
-    void naoEncontraTreinador(){
+    void naoDeveEncontrarTreinadorComDadosInvalidos(){
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             treinadorService.consultarTreinador("2");
         });
