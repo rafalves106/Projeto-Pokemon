@@ -4,46 +4,18 @@
 
 package br.com.falves.domain;
 import br.com.falves.builder.PokemonBuilder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.Objects;
-
+@Getter
+@Setter
+@EqualsAndHashCode
 public class Pokemon {
     private Long numero;
     private Integer nivel;
     private EspeciePokemon especiePokemon;
     private Treinador treinador;
-
-    public Long getNumero() {
-        return numero;
-    }
-
-    public void setNumero(Long numero) {
-        this.numero = numero;
-    }
-
-    public Integer getNivel() {
-        return nivel;
-    }
-
-    public void setNivel(Integer nivel) {
-        this.nivel = nivel;
-    }
-
-    public EspeciePokemon getEspeciePokemon() {
-        return especiePokemon;
-    }
-
-    public void setEspeciePokemon(EspeciePokemon especiePokemon) {
-        this.especiePokemon = especiePokemon;
-    }
-
-    public Treinador getTreinador() {
-        return treinador;
-    }
-
-    public void setTreinador(Treinador treinador) {
-        this.treinador = treinador;
-    }
 
     public Pokemon(PokemonBuilder pokemonBuilder) {
         this.numero = pokemonBuilder.getNumero();
@@ -54,18 +26,6 @@ public class Pokemon {
 
     public static PokemonBuilder builder(){
         return new PokemonBuilder();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Pokemon pokemon = (Pokemon) o;
-        return Objects.equals(numero, pokemon.numero);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(numero);
     }
 
     @Override

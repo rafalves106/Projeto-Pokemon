@@ -1,5 +1,10 @@
 package br.com.falves.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public enum EspeciePokemon {
     BULBASAUR(TipoPokemon.Grama),
     IVYSAUR(TipoPokemon.Grama),
@@ -176,11 +181,4 @@ public enum EspeciePokemon {
 
     private final TipoPokemon tipo;
 
-    EspeciePokemon(TipoPokemon tipo) {
-        this.tipo = tipo;
-    }
-
-    public TipoPokemon getTipo() {
-        return tipo;
-    }
 }
