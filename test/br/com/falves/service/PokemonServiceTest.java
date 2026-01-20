@@ -4,19 +4,24 @@ import br.com.falves.dao.IPokemonDAO;
 import br.com.falves.dao.PokemonMapDAO;
 import br.com.falves.domain.EspeciePokemon;
 import br.com.falves.domain.Pokemon;
+import br.com.falves.repository.PokemonRepository;
+import br.com.falves.repository.TreinadorRepository;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class PokemonServiceTest {
-    PokemonService pokemonService = new PokemonService();
-    IPokemonDAO iPokemonDAO = PokemonMapDAO.getInstance();
+    PokemonService pokemonService;
+    PokemonRepository pokemonRepository;
 
     Pokemon pokemon;
 
     @BeforeEach
     public void init(){
-        iPokemonDAO.buscarTodos().clear();
+        pokemonService = new PokemonService();
+        pokemonRepository = new PokemonRepository();
+        pokemonRepository.limparTabela();
 
         pokemon = Pokemon.builder()
                 .numero(1L)
@@ -24,14 +29,20 @@ class PokemonServiceTest {
                 .nivel(20)
                 .build();
 
-        iPokemonDAO.cadastrar(pokemon);
+        pokemonRepository.cadastrar(pokemon);
+    }
+
+    @AfterAll
+    public static void after(){
+        PokemonRepository pokemonRepository = new PokemonRepository();
+        pokemonRepository.limparTabela();
     }
 
     @Test
     void deveCadastrarPokemonComDadosValidos() {
         String dados = "2,Mew,1";
         pokemonService.cadastrarPokemon(dados);
-        Pokemon pokemonConsultado = iPokemonDAO.consultar(2L);
+        Pokemon pokemonConsultado = pokemonService.consultarPokemon("2");
 
         Assertions.assertEquals(2L, pokemonConsultado.getNumero());
     }
@@ -91,7 +102,9 @@ class PokemonServiceTest {
     void editarPokemon() {
         String dadosNovos = "Mewtwo,80";
         pokemonService.editarPokemon(pokemon, dadosNovos);
-        boolean pokemonAlterado = pokemon.getEspeciePokemon().toString().toLowerCase().contains("mewtwo") && pokemon.getNivel() == 80;
+
+        Pokemon pokemonConsultado = pokemonService.consultarPokemon("1");
+        boolean pokemonAlterado = pokemonConsultado.getEspeciePokemon().equals(EspeciePokemon.MEWTWO) || pokemonConsultado.getNivel() == 80;
         Assertions.assertTrue(pokemonAlterado);
     }
 

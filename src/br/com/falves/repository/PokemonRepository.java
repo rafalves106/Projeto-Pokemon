@@ -157,7 +157,7 @@ public class PokemonRepository implements IPokemonDAO {
         EntityManager em = getEntityManager();
         try {
             em.getTransaction().begin();
-            em.createQuery("DELETE FROM Pokemon ").executeUpdate();
+            em.createNativeQuery("DELETE FROM tb_pokemon").executeUpdate();
             em.getTransaction().commit();
         } catch (Exception e) {
             em.getTransaction().rollback();

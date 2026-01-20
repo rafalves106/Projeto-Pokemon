@@ -5,6 +5,7 @@ import br.com.falves.domain.Regioes;
 import br.com.falves.domain.Treinador;
 import br.com.falves.repository.PokemonRepository;
 import br.com.falves.repository.TreinadorRepository;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,12 @@ class TreinadorServiceTest {
                 .build();
 
         treinadorRepository.cadastrar(treinador);
+    }
+
+    @AfterAll
+    public static void after(){
+        TreinadorRepository treinadorRepository = new TreinadorRepository();
+        treinadorRepository.limparTabela();
     }
 
     @Test

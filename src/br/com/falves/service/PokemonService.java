@@ -110,7 +110,6 @@ public class PokemonService {
                 throw new IllegalArgumentException("Dados inválidos. Informe: ESPÉCIE, NÍVEL");
             }
 
-            Long numOriginal = pokemon.getNumero();
             String especieStr = dadosSeparados[0].trim().toUpperCase();
             EspeciePokemon especie = EspeciePokemon.valueOf(especieStr);
             int nivel = Integer.parseInt(dadosSeparados[1].trim());
@@ -118,16 +117,13 @@ public class PokemonService {
             if(nivel <= 0 || nivel > 100){
                 throw new IllegalArgumentException("Nível deve ser positivo entre 1 e 100.");
             }
-
-            Pokemon.builder().nivel(nivel).numero(numOriginal).especiePokemon(especie);
-
-            Pokemon pokemonAntigo = pokemonRepository.consultar(numOriginal);
+            Pokemon pokemonAntigo = pokemonRepository.consultar(pokemon.getNumero());
 
             if (pokemonAntigo != null && pokemonAntigo.getTreinador() != null) {
                Pokemon.builder().treinador(pokemonAntigo.getTreinador());
             }
 
-            Pokemon pokemonAlterado = Pokemon.builder().build();
+            Pokemon pokemonAlterado = Pokemon.builder().nivel(nivel).numero(pokemon.getNumero()).especiePokemon(especie).build();
 
             pokemonRepository.alterar(pokemonAlterado);
 
