@@ -3,35 +3,36 @@
  */
 
 package br.com.falves.domain;
-import br.com.falves.builder.PokemonBuilder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Getter
 @Setter
-@EqualsAndHashCode
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "tb_pokemon")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Pokemon {
+    @Id
+    @EqualsAndHashCode.Include
     private Long numero;
     private Integer nivel;
+
+    @Enumerated(EnumType.STRING)
     private EspeciePokemon especiePokemon;
+
+    @Enumerated(EnumType.STRING)
+    private StatusPokemon status;
+
+    @ManyToOne
+    @JoinColumn(name = "treinador_id")
     private Treinador treinador;
-
-    public Pokemon(PokemonBuilder pokemonBuilder) {
-        this.numero = pokemonBuilder.getNumero();
-        this.especiePokemon = pokemonBuilder.getEspecie();
-        this.nivel = pokemonBuilder.getNivel();
-        this.treinador = pokemonBuilder.getTreinador();
-    }
-
-    public static PokemonBuilder builder(){
-        return new PokemonBuilder();
-    }
 
     @Override
     public String toString() {
         String nomeTreinador = (treinador == null) ? "Selvagem" : treinador.getNome();
-
-        return "NUM: " + numero + " | Espécie: " + especiePokemon.toString() + " | Nível: " + nivel + " | Treinador: " + nomeTreinador;
+        return "Espécie: " + especiePokemon + " | Nível: " + nivel + " | Treinador: " + nomeTreinador;
     }
 }

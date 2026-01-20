@@ -4,27 +4,124 @@
 
 package br.com.falves.repository;
 
+import br.com.falves.dao.ITreinadorDAO;
 import br.com.falves.domain.Treinador;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
-public class TreinadorRepository implements ITreinadorRepository{
+import java.util.Collection;
+
+public class TreinadorRepository implements ITreinadorDAO {
+    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("projeto-pokemon");
+
+    private EntityManager getEntityManager() {
+        return emf.createEntityManager();
+    }
 
     @Override
-    public void adicionarTreinador(Treinador treinador) {
+    public Boolean cadastrar(Treinador treinador) {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.persist(treinador);
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception error){
+            em.getTransaction().rollback();
+            System.out.println(error.getMessage());
+            return false;
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public void excluir(Long id) {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Treinador t = em.find(Treinador.class, id);
+            if (t != null) {
+                em.remove(t);
+            }
+            em.getTransaction().commit();
+        } catch (Exception error){
+            em.getTransaction().rollback();
+            System.out.println(error.getMessage());
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public void alterar(Treinador treinador) {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.merge(treinador);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public void adicionarAoTime(Treinador treinador) {
+        alterar(treinador);
+    }
+
+    @Override
+    public void removerDoTime(Treinador treinador) {
+        alterar(treinador);
 
     }
 
     @Override
-    public void editarTreinador(Treinador treinador) {
-
+    public void adicionarNaBox(Treinador treinador) {
+        alterar(treinador);
     }
 
     @Override
-    public void deletarTreinaor(Treinador treinador) {
-
+    public void removerDaBox(Treinador treinador) {
+        alterar(treinador);
     }
 
     @Override
-    public Treinador encontrarTreinadorPorId(Long id) {
-        return null;
+    public Treinador consultar(Long id) {
+        EntityManager em = getEntityManager();
+        try {
+            return em.find(Treinador.class, id);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public Collection<Treinador> buscarTodos() {
+        EntityManager em = getEntityManager();
+
+        try {
+            return em.createQuery("SELECT t FROM Treinador t", Treinador.class).getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public void limparTabela() {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.createNativeQuery("DELETE FROM tb_pokemon").executeUpdate();
+            em.createNativeQuery("DELETE FROM tb_treinador").executeUpdate();
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+        } finally {
+            em.close();
+        }
     }
 }

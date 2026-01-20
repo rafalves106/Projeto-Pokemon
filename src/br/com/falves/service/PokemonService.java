@@ -4,17 +4,17 @@
 
 package br.com.falves.service;
 
-import br.com.falves.builder.PokemonBuilder;
 import br.com.falves.dao.IPokemonDAO;
 import br.com.falves.dao.PokemonMapDAO;
 import br.com.falves.domain.EspeciePokemon;
 import br.com.falves.domain.Pokemon;
 import br.com.falves.domain.TipoPokemon;
+import br.com.falves.repository.PokemonRepository;
 
 import javax.swing.*;
 
 public class PokemonService {
-    private final IPokemonDAO pokemonDAO = PokemonMapDAO.getInstance();
+    private final PokemonRepository pokemonRepository = new PokemonRepository();
 
     // CREATE - CADASTRA POKÉMON
     public void cadastrarPokemon(String dados) {
@@ -35,13 +35,9 @@ public class PokemonService {
             EspeciePokemon especie = EspeciePokemon.valueOf(especieStr);
             Integer nivel = Integer.parseInt(dadosSeparados[2]);
 
-            Pokemon pokemon = Pokemon.builder()
-                    .numero(num)
-                    .especie(especie)
-                    .nivel(nivel)
-                    .build();
+            Pokemon pokemon = Pokemon.builder().numero(num).especiePokemon(especie).nivel(nivel).build();
 
-            Boolean isCadastrado = pokemonDAO.cadastrar(pokemon);
+            Boolean isCadastrado = pokemonRepository.cadastrar(pokemon);
 
             if (!isCadastrado) {
                 throw new IllegalArgumentException("Pokémon com NUM " + num + " já existe!");
@@ -72,7 +68,7 @@ public class PokemonService {
             Long num = Long.parseLong(idStr.trim());
 
             // CONSULTA NO MAP COM O NUM
-            Pokemon pokemon = pokemonDAO.consultar(num);
+            Pokemon pokemon = pokemonRepository.consultar(num);
 
             // SE O POKÉMON RETORNADO FOR NULO RETORNA ERRO
             if (pokemon == null){
@@ -90,14 +86,14 @@ public class PokemonService {
 
     // READ DE POKÉMONS - LISTA TODOS OS POKÉMONS
     public String listaPokemons(){
-        if(pokemonDAO.buscarTodos().isEmpty()){
+        if(pokemonRepository.buscarTodos().isEmpty()){
             throw new IllegalArgumentException("Nenhum pokémon cadastrado.\nCadastre um novo pokémon.");
         }
 
         StringBuilder sb = new StringBuilder();
 
         sb.append("Listando os Pokémons Cadastrados: \n");
-        pokemonDAO.buscarTodos().forEach(t -> sb.append(t.toString()).append("\n"));
+        pokemonRepository.buscarTodos().forEach(t -> sb.append(t.toString()).append("\n"));
 
         return sb.toString();
     }
@@ -117,26 +113,23 @@ public class PokemonService {
             Long numOriginal = pokemon.getNumero();
             String especieStr = dadosSeparados[0].trim().toUpperCase();
             EspeciePokemon especie = EspeciePokemon.valueOf(especieStr);
-            Integer nivel = Integer.parseInt(dadosSeparados[1].trim());
+            int nivel = Integer.parseInt(dadosSeparados[1].trim());
 
             if(nivel <= 0 || nivel > 100){
                 throw new IllegalArgumentException("Nível deve ser positivo entre 1 e 100.");
             }
 
-            PokemonBuilder builder = Pokemon.builder()
-                    .numero(numOriginal)
-                    .especie(especie)
-                    .nivel(nivel);
+            Pokemon.builder().nivel(nivel).numero(numOriginal).especiePokemon(especie);
 
-            Pokemon pokemonAntigo = pokemonDAO.consultar(numOriginal);
+            Pokemon pokemonAntigo = pokemonRepository.consultar(numOriginal);
 
             if (pokemonAntigo != null && pokemonAntigo.getTreinador() != null) {
-                builder.setTreinador(pokemonAntigo.getTreinador());
+               Pokemon.builder().treinador(pokemonAntigo.getTreinador());
             }
 
-            Pokemon pokemonAlterado = builder.build();
+            Pokemon pokemonAlterado = Pokemon.builder().build();
 
-            pokemonDAO.alterar(pokemonAlterado);
+            pokemonRepository.alterar(pokemonAlterado);
 
         } catch (NumberFormatException e){
             throw new IllegalArgumentException("Erro: Nível deve ser um número inteiro.");
@@ -149,7 +142,7 @@ public class PokemonService {
 
     // DELETE - EXCLUI POKÉMON
     public void excluirPokemon(Pokemon pokemon) {
-        pokemonDAO.excluir(pokemon.getNumero());
+        pokemonRepository.excluir(pokemon.getNumero());
     }
 
     // READ - RETORNA POKÉMONS A PARTIR DE UM NÍVEL MÍNIMO
@@ -183,10 +176,10 @@ public class PokemonService {
             }
 
             sb.append("Listando todos os Pokémons do nível ").append(nivelMinimo).append(" ao nível: ").append(nivelMaximo).append("\n");
-            pokemonDAO.buscarPorNivel(nivelMinimo, nivelMaximo).forEach(p -> sb.append(p.toString()).append("\n"));
+            pokemonRepository.buscarPorNivel(nivelMinimo, nivelMaximo).forEach(p -> sb.append(p.toString()).append("\n"));
         } else {
             sb.append("Listando todos os Pokémons de nível ").append(nivelMinimo).append(" ou maior. \n");
-            pokemonDAO.buscarPorNivel(nivelMinimo).forEach(p -> sb.append(p.toString()).append("\n"));
+            pokemonRepository.buscarPorNivel(nivelMinimo).forEach(p -> sb.append(p.toString()).append("\n"));
         }
 
         return sb.toString();
@@ -201,7 +194,7 @@ public class PokemonService {
         StringBuilder sb = new StringBuilder();
         sb.append("Listando todos os Pokémons da espécie: ").append(especieStr).append("\n");
 
-        pokemonDAO.buscarPorEspecie(EspeciePokemon.valueOf(especieStr)).forEach(p -> sb.append(p.toString()).append("\n"));
+        pokemonRepository.buscarPorEspecie(EspeciePokemon.valueOf(especieStr)).forEach(p -> sb.append(p.toString()).append("\n"));
 
         return sb.toString();
     }
@@ -218,7 +211,7 @@ public class PokemonService {
         StringBuilder sb = new StringBuilder();
         sb.append("Listando todos os Pokémons do tipo: ").append(tipoFormatado).append("\n");
 
-        pokemonDAO.buscarPorTipo(TipoPokemon.valueOf(tipoFormatado)).forEach(p -> sb.append(p.toString()).append("\n"));
+        pokemonRepository.buscarPorTipo(TipoPokemon.valueOf(tipoFormatado)).forEach(p -> sb.append(p.toString()).append("\n"));
 
         return sb.toString();
     }

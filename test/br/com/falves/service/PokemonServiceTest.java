@@ -1,18 +1,12 @@
 package br.com.falves.service;
 
 import br.com.falves.dao.IPokemonDAO;
-import br.com.falves.dao.ITreinadorDAO;
 import br.com.falves.dao.PokemonMapDAO;
-import br.com.falves.dao.TreinadorMapDAO;
 import br.com.falves.domain.EspeciePokemon;
 import br.com.falves.domain.Pokemon;
-import br.com.falves.domain.Regioes;
-import br.com.falves.domain.Treinador;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class PokemonServiceTest {
     PokemonService pokemonService = new PokemonService();
@@ -26,7 +20,7 @@ class PokemonServiceTest {
 
         pokemon = Pokemon.builder()
                 .numero(1L)
-                .especie(EspeciePokemon.MOLTRES)
+                .especiePokemon(EspeciePokemon.MOLTRES)
                 .nivel(20)
                 .build();
 

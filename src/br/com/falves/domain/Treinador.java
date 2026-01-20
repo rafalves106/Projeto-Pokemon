@@ -4,53 +4,65 @@
 
 package br.com.falves.domain;
 
-import br.com.falves.builder.TreinadorBuilder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import java.util.List;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.Where;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Setter
 @Getter
-@EqualsAndHashCode
+@Builder
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Table(name = "tb_treinador")
 public class Treinador {
+
+    @Id
+    @EqualsAndHashCode.Include
     private Long id;
     private String nome;
+    @Enumerated(EnumType.STRING)
     private Regioes regiao;
     private Integer idade, insignias;
-    private List<Pokemon> equipe;
-    private List<Pokemon> box;
 
-    public Treinador(TreinadorBuilder treinadorBuilder) {
-        this.id = treinadorBuilder.getId();
-        this.nome = treinadorBuilder.getNome();
-        this.regiao = treinadorBuilder.getRegiao();
-        this.idade = treinadorBuilder.getIdade();
-        this.insignias = treinadorBuilder.getInsignias();
-        this.equipe = treinadorBuilder.getEquipe();
-        this.box = treinadorBuilder.getBox();
-    }
+    @OneToMany(mappedBy = "treinador", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Where(clause = "status = 'EQUIPE'")
+    @Builder.Default
+    private Set<Pokemon> equipe = new HashSet<>();
 
-    public static TreinadorBuilder builder(){
-        return new TreinadorBuilder();
-    }
+    @OneToMany(mappedBy = "treinador", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Where(clause = "status = 'BOX'")
+    @Builder.Default
+    private Set<Pokemon> box = new HashSet<>();
+
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        if (equipe.isEmpty() && box.isEmpty()) {
-            sb.append(" (Sem pokémons)");
-        } else if(!equipe.isEmpty()){
-            for(Pokemon pokemon : equipe){
-                sb.append("\n   -> ");
-                sb.append(pokemon.toString());
-            }
-        } else if(!box.isEmpty()){
-            for(Pokemon pokemon : box){
-                sb.append("\n   -> ");
-                sb.append(pokemon.toString());
+        sb.append("ID: ").append(id).append(" | Nome: ").append(nome).append(" | Região: ").append(regiao);
+
+        if (!equipe.isEmpty()) {
+            sb.append("\n [EQUIPE]:");
+            for (Pokemon p : equipe) {
+                sb.append("\n   -> ").append(p.getEspeciePokemon()).append(" (Nvl ").append(p.getNivel()).append(")");
             }
         }
-        return "ID: " + id + " | Nome: " + nome + " | Região: " + regiao.toString() + "\nPokémon:" + sb;
+
+        if (!box.isEmpty()) {
+            sb.append("\n [BOX]:");
+            for (Pokemon p : box) {
+                sb.append("\n   -> ").append(p.getEspeciePokemon()).append(" (Nvl ").append(p.getNivel()).append(")");
+            }
+        }
+
+        if (equipe.isEmpty() && box.isEmpty()) {
+            sb.append("\n (Sem pokémons)");
+        }
+
+        return sb.toString();
     }
 }

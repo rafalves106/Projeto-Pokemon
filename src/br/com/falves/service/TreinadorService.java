@@ -5,19 +5,19 @@
 package br.com.falves.service;
 
 import br.com.falves.dao.ITreinadorDAO;
-import br.com.falves.dao.TreinadorMapDAO;
 import br.com.falves.domain.Pokemon;
 import br.com.falves.domain.Regioes;
+import br.com.falves.domain.StatusPokemon;
 import br.com.falves.domain.Treinador;
-
-import javax.swing.*;
+import br.com.falves.repository.PokemonRepository;
+import br.com.falves.repository.TreinadorRepository;
 
 public class TreinadorService {
-    private final ITreinadorDAO treinadorDAO = TreinadorMapDAO.getInstance();
+    private final TreinadorRepository treinadorRepository = new TreinadorRepository();
+    private final PokemonRepository pokemonRepository = new PokemonRepository();
 
     // CREATE - CADASTRA TREINADOR
     public void cadastrarTreinador(String dados){
-
         // SE OS DADOS INSERIDOS ESTIVEREM VAZIOS RETORNA ERRO
         if(dados == null){
             throw new IllegalArgumentException("Dados inválidos.");
@@ -47,18 +47,16 @@ public class TreinadorService {
             }
 
             // CRIA UM NOVO TREINADOR NO MAP COM OS DADOS COLETADOS
-            Treinador treinador = Treinador.builder()
+            Treinador treinadorParaCadastro = Treinador.builder()
                     .id(id)
                     .nome(nome)
                     .regiao(regiaoFormatada)
                     .idade(idade)
                     .insignias(insignias)
-                    .equipeVazia()
-                    .boxVazia()
                     .build();
 
             // VARIÁVEL COM A VERIFICAÇÃO SE FOI CADASTRADO OU NÃO
-            Boolean isCadastrado = treinadorDAO.cadastrar(treinador);
+            Boolean isCadastrado = treinadorRepository.cadastrar(treinadorParaCadastro);
 
             // SE FOR FALSE, RETORNA UM ERRO
             if(!isCadastrado) {
@@ -93,7 +91,7 @@ public class TreinadorService {
             Long id = Long.parseLong(idStr.trim());
 
             // CONSULTA NO MAP COM O ID
-            Treinador treinador = treinadorDAO.consultar(id);
+            Treinador treinador = treinadorRepository.consultar(id);
 
             // SE O TREINADOR RETORNADO FOR NULO RETORNA ERRO
             if (treinador == null){
@@ -111,14 +109,14 @@ public class TreinadorService {
 
     // READ DE TREINADORES - LISTA TODOS OS TREINADORES
     public String listaTreinadores(){
-        if(treinadorDAO.buscarTodos().isEmpty()){
+        if(treinadorRepository.buscarTodos().isEmpty()){
             throw new IllegalArgumentException("Nenhum treinador cadastrado.\nCadastre um novo treinador.");
         }
 
         StringBuilder sb = new StringBuilder();
 
         sb.append("Listando os Treinadores Cadastrados: \n");
-        treinadorDAO.buscarTodos().forEach(t -> sb.append(t.toString()).append("\n"));
+        treinadorRepository.buscarTodos().forEach(t -> sb.append(t.toString()).append("\n"));
 
         return sb.toString();
     }
@@ -158,7 +156,7 @@ public class TreinadorService {
                 treinadorAlterado.setBox(treinador.getBox());
             }
 
-            treinadorDAO.alterar(treinadorAlterado);
+            treinadorRepository.alterar(treinadorAlterado);
 
         } catch (NumberFormatException e){
             throw new IllegalArgumentException("Erro: ID, Idade e Insígnias devem ser números.");
@@ -171,7 +169,7 @@ public class TreinadorService {
 
     // DELETE
     public void excluirTreinador(Treinador treinador) {
-        treinadorDAO.excluir(treinador.getId());
+        treinadorRepository.excluir(treinador.getId());
     }
 
     // UPDATE DE POKÉMONS ASSOCIADOS - ATRIBUI O POKÉMON AO TREINADOR
@@ -185,13 +183,17 @@ public class TreinadorService {
         boolean foiParaBox = false;
 
         if (treinador.getEquipe().size() < 6) {
-            treinadorDAO.adicionarAoTime(pokemon, treinador);
+            pokemon.setStatus(StatusPokemon.EQUIPE);
+            pokemon.setTreinador(treinador);
+            treinador.getEquipe().add(pokemon);
         } else {
-            treinadorDAO.adicionarNaBox(pokemon, treinador);
-            foiParaBox = true;
+            pokemon.setStatus(StatusPokemon.BOX);
+            pokemon.setTreinador(treinador);
+
+            treinador.getBox().add(pokemon);
         }
 
-        pokemon.setTreinador(treinador);
+        treinadorRepository.alterar(treinador);
 
         if (foiParaBox){
             return "Equipe cheia! " + pokemon.getEspeciePokemon() + " foi enviado para a Box.";
@@ -202,7 +204,6 @@ public class TreinadorService {
 
     // UPDATE DE POKÉMONS ASSOCIADOS - REMOVE POKÉMON ATRIBUIDO AO TREINADOR DO TIME PRINCIPAL
     public void removerPokemonDoTime(Treinador treinador, Pokemon pokemon){
-
         // Verifica se o pokemon possui um treinador diferente
         if(pokemon.getTreinador() != treinador){
             throw new IllegalArgumentException("Este Pokémon pertence a outro treinador.");
@@ -213,8 +214,12 @@ public class TreinadorService {
             throw new IllegalArgumentException("Este Pokémon já está na box do treinador.");
         }
 
-        treinadorDAO.removerDoTime(pokemon, treinador);
-        treinadorDAO.adicionarNaBox(pokemon, treinador);
+        if (treinador.getEquipe().contains(pokemon)) {
+            treinador.getEquipe().remove(pokemon);
+            treinador.getBox().add(pokemon);
+            pokemon.setStatus(StatusPokemon.BOX);
+            treinadorRepository.alterar(treinador);
+        }
     }
 
     // UPDATE DE POKÉMONS ASSOCIADOS - REMOVE O POKÉMON DA ATRIBUIÇÃO DO TREINADOR
@@ -229,7 +234,8 @@ public class TreinadorService {
             throw new IllegalArgumentException("Este Pokémon está na equipe principal do treinador. Envie para a box primeiro.");
         }
 
-        treinadorDAO.removerDaBox(pokemon, treinador);
+        treinador.getBox().remove(pokemon);
+        treinadorRepository.removerDaBox(treinador);
         pokemon.setTreinador(null);
     }
 
