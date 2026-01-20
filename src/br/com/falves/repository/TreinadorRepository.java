@@ -13,15 +13,19 @@ import jakarta.persistence.Persistence;
 import java.util.Collection;
 
 public class TreinadorRepository implements ITreinadorDAO {
-    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("projeto-pokemon");
+    private EntityManagerFactory emf;
 
-    private EntityManager getEntityManager() {
-        return emf.createEntityManager();
+    public TreinadorRepository(){
+        this.emf = Persistence.createEntityManagerFactory("projeto-pokemon");
+    }
+
+    public TreinadorRepository(String persistenceUnitName){
+        this.emf = Persistence.createEntityManagerFactory(persistenceUnitName);
     }
 
     @Override
     public Boolean cadastrar(Treinador treinador) {
-        EntityManager em = getEntityManager();
+        EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
             em.persist(treinador);
@@ -38,7 +42,7 @@ public class TreinadorRepository implements ITreinadorDAO {
 
     @Override
     public void excluir(Long id) {
-        EntityManager em = getEntityManager();
+        EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
             Treinador t = em.find(Treinador.class, id);
@@ -56,7 +60,7 @@ public class TreinadorRepository implements ITreinadorDAO {
 
     @Override
     public void alterar(Treinador treinador) {
-        EntityManager em = getEntityManager();
+        EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
             em.merge(treinador);
@@ -92,7 +96,7 @@ public class TreinadorRepository implements ITreinadorDAO {
 
     @Override
     public Treinador consultar(Long id) {
-        EntityManager em = getEntityManager();
+        EntityManager em = emf.createEntityManager();
         try {
             return em.find(Treinador.class, id);
         } finally {
@@ -102,7 +106,7 @@ public class TreinadorRepository implements ITreinadorDAO {
 
     @Override
     public Collection<Treinador> buscarTodos() {
-        EntityManager em = getEntityManager();
+        EntityManager em = emf.createEntityManager();
 
         try {
             return em.createQuery("SELECT t FROM Treinador t", Treinador.class).getResultList();
@@ -112,7 +116,7 @@ public class TreinadorRepository implements ITreinadorDAO {
     }
 
     public void limparTabela() {
-        EntityManager em = getEntityManager();
+        EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
             em.createNativeQuery("DELETE FROM tb_pokemon").executeUpdate();

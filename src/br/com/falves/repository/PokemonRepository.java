@@ -19,15 +19,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PokemonRepository implements IPokemonDAO {
-    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("projeto-pokemon");
+    private EntityManagerFactory emf;
 
-    private EntityManager getEntityManager(){
-        return emf.createEntityManager();
+    public PokemonRepository(){
+        this.emf = Persistence.createEntityManagerFactory("projeto-pokemon");
+    }
+
+    public PokemonRepository(String persistenceUnitName){
+        this.emf = Persistence.createEntityManagerFactory(persistenceUnitName);
     }
 
     @Override
     public Boolean cadastrar(Pokemon pokemon) {
-        EntityManager em = getEntityManager();
+        EntityManager em = emf.createEntityManager();
 
         try {
             em.getTransaction().begin();
@@ -45,7 +49,7 @@ public class PokemonRepository implements IPokemonDAO {
 
     @Override
     public void excluir(Long numero) {
-        EntityManager em = getEntityManager();
+        EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
             Pokemon p = em.find(Pokemon.class, numero);
@@ -63,7 +67,7 @@ public class PokemonRepository implements IPokemonDAO {
 
     @Override
     public void alterar(Pokemon pokemon) {
-        EntityManager em = getEntityManager();
+        EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
             em.merge(pokemon);
@@ -78,7 +82,7 @@ public class PokemonRepository implements IPokemonDAO {
 
     @Override
     public Pokemon consultar(Long numero) {
-        EntityManager em = getEntityManager();
+        EntityManager em = emf.createEntityManager();
         try {
             return em.find(Pokemon.class, numero);
         } finally {
@@ -88,7 +92,7 @@ public class PokemonRepository implements IPokemonDAO {
 
     @Override
     public Collection<Pokemon> buscarTodos() {
-        EntityManager em = getEntityManager();
+        EntityManager em = emf.createEntityManager();
         try {
             return em.createQuery("SELECT p FROM Pokemon p", Pokemon.class).getResultList();
         } finally {
@@ -98,7 +102,7 @@ public class PokemonRepository implements IPokemonDAO {
 
     @Override
     public Collection<Pokemon> buscarPorTipo(TipoPokemon tipo) {
-        EntityManager em = getEntityManager();
+        EntityManager em = emf.createEntityManager();
         try {
             List<EspeciePokemon> especiePokemons = Arrays.stream(EspeciePokemon.values())
                     .filter(e -> e.getTipo().equals(tipo))
@@ -118,7 +122,7 @@ public class PokemonRepository implements IPokemonDAO {
 
     @Override
     public Collection<Pokemon> buscarPorNivel(int nivelMinimo) {
-        EntityManager em = getEntityManager();
+        EntityManager em = emf.createEntityManager();
         try {
             return em.createQuery("SELECT p FROM Pokemon p WHERE p.nivel >= :nivelMinimo ORDER BY p.nivel ASC", Pokemon.class)
                     .setParameter("nivelMinimo", nivelMinimo)
@@ -130,7 +134,7 @@ public class PokemonRepository implements IPokemonDAO {
 
     @Override
     public Collection<Pokemon> buscarPorNivel(int nivelMinimo, int nivelMaximo) {
-        EntityManager em = getEntityManager();
+        EntityManager em = emf.createEntityManager();
         try {
             return em.createQuery("SELECT p FROM Pokemon p WHERE p.nivel >= :nivelMinimo AND p.nivel <= :nivelMaximo ORDER BY p.nivel ASC", Pokemon.class)
                     .setParameter("nivelMinimo", nivelMinimo)
@@ -143,7 +147,7 @@ public class PokemonRepository implements IPokemonDAO {
 
     @Override
     public Collection<Pokemon> buscarPorEspecie(EspeciePokemon especie) {
-        EntityManager em = getEntityManager();
+        EntityManager em = emf.createEntityManager();
         try {
             return em.createQuery("SELECT p FROM Pokemon p WHERE p.especiePokemon = :especie", Pokemon.class)
                     .setParameter("especie", especie)
@@ -154,7 +158,7 @@ public class PokemonRepository implements IPokemonDAO {
     }
 
     public void limparTabela() {
-        EntityManager em = getEntityManager();
+        EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
             em.createNativeQuery("DELETE FROM tb_pokemon").executeUpdate();

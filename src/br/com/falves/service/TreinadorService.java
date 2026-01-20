@@ -4,7 +4,6 @@
 
 package br.com.falves.service;
 
-import br.com.falves.dao.ITreinadorDAO;
 import br.com.falves.domain.Pokemon;
 import br.com.falves.domain.Regioes;
 import br.com.falves.domain.StatusPokemon;
@@ -13,8 +12,18 @@ import br.com.falves.repository.PokemonRepository;
 import br.com.falves.repository.TreinadorRepository;
 
 public class TreinadorService {
-    private final TreinadorRepository treinadorRepository = new TreinadorRepository();
-    private final PokemonRepository pokemonRepository = new PokemonRepository();
+    private TreinadorRepository treinadorRepository;
+    private PokemonRepository pokemonRepository;
+
+    public TreinadorService() {
+        this.treinadorRepository = new TreinadorRepository();
+        this.pokemonRepository = new PokemonRepository();
+    }
+
+    public TreinadorService(TreinadorRepository treinadorRepository, PokemonRepository pokemonRepository) {
+        this.treinadorRepository = treinadorRepository;
+        this.pokemonRepository = pokemonRepository;
+    }
 
     // CREATE - CADASTRA TREINADOR
     public void cadastrarTreinador(String dados){
@@ -235,8 +244,11 @@ public class TreinadorService {
         }
 
         treinador.getBox().remove(pokemon);
-        treinadorRepository.removerDaBox(treinador);
         pokemon.setTreinador(null);
+        pokemon.setStatus(null);
+
+        pokemonRepository.alterar(pokemon);
+        treinadorRepository.removerDaBox(treinador);
     }
 
     // READ DE POKÉMONS ASSOCIADOS - LISTA OS POKÉMONS DA EQUIPE PRINCIPAL DO TREINADOR

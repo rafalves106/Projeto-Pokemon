@@ -1,11 +1,8 @@
 package br.com.falves.service;
 
-import br.com.falves.dao.IPokemonDAO;
-import br.com.falves.dao.PokemonMapDAO;
 import br.com.falves.domain.EspeciePokemon;
 import br.com.falves.domain.Pokemon;
 import br.com.falves.repository.PokemonRepository;
-import br.com.falves.repository.TreinadorRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,14 +10,13 @@ import org.junit.jupiter.api.Test;
 
 class PokemonServiceTest {
     PokemonService pokemonService;
-    PokemonRepository pokemonRepository;
+    PokemonRepository pokemonRepository = new PokemonRepository("projeto-pokemon-test");
 
     Pokemon pokemon;
 
     @BeforeEach
     public void init(){
-        pokemonService = new PokemonService();
-        pokemonRepository = new PokemonRepository();
+        pokemonService = new PokemonService(pokemonRepository);
         pokemonRepository.limparTabela();
 
         pokemon = Pokemon.builder()

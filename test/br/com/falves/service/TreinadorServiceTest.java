@@ -12,17 +12,15 @@ import org.junit.jupiter.api.Test;
 
 class TreinadorServiceTest {
     TreinadorService treinadorService;
-    TreinadorRepository treinadorRepository;
-    PokemonRepository pokemonRepository;
+    TreinadorRepository treinadorRepository = new TreinadorRepository("projeto-pokemon-test");;
+    PokemonRepository pokemonRepository = new PokemonRepository("projeto-pokemon-test");
 
     Pokemon pokemon;
     Treinador treinador;
 
     @BeforeEach
     public void init(){
-        treinadorService = new TreinadorService();
-        treinadorRepository = new TreinadorRepository();
-        pokemonRepository = new PokemonRepository();
+        treinadorService = new TreinadorService(treinadorRepository, pokemonRepository);
         treinadorRepository.limparTabela();
 
         pokemon = Pokemon.builder()

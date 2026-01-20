@@ -4,8 +4,6 @@
 
 package br.com.falves.service;
 
-import br.com.falves.dao.IPokemonDAO;
-import br.com.falves.dao.PokemonMapDAO;
 import br.com.falves.domain.EspeciePokemon;
 import br.com.falves.domain.Pokemon;
 import br.com.falves.domain.TipoPokemon;
@@ -14,7 +12,15 @@ import br.com.falves.repository.PokemonRepository;
 import javax.swing.*;
 
 public class PokemonService {
-    private final PokemonRepository pokemonRepository = new PokemonRepository();
+    private PokemonRepository pokemonRepository;
+
+    public PokemonService() {
+        this.pokemonRepository = new PokemonRepository();
+    }
+
+    public PokemonService(PokemonRepository pokemonRepository) {
+        this.pokemonRepository = pokemonRepository;
+    }
 
     // CREATE - CADASTRA POKÉMON
     public void cadastrarPokemon(String dados) {
@@ -119,11 +125,13 @@ public class PokemonService {
             }
             Pokemon pokemonAntigo = pokemonRepository.consultar(pokemon.getNumero());
 
+            Pokemon.PokemonBuilder builder = Pokemon.builder().nivel(nivel).numero(pokemon.getNumero()).especiePokemon(especie);
+
             if (pokemonAntigo != null && pokemonAntigo.getTreinador() != null) {
-               Pokemon.builder().treinador(pokemonAntigo.getTreinador());
+               builder.treinador(pokemonAntigo.getTreinador());
             }
 
-            Pokemon pokemonAlterado = Pokemon.builder().nivel(nivel).numero(pokemon.getNumero()).especiePokemon(especie).build();
+            Pokemon pokemonAlterado = builder.build();
 
             pokemonRepository.alterar(pokemonAlterado);
 

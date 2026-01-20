@@ -28,7 +28,14 @@ public class MenuPokemon {
             if (dados == null) return;
         }
 
-        pokemonService.cadastrarPokemon(dados);
+        try {
+            pokemonService.cadastrarPokemon(dados);
+            JOptionPane.showMessageDialog(null, "Pokémon cadastrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erro de Validação", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro Técnico: " + e.getMessage());
+        }
     }
 
     public Pokemon consultarPokemon(){
@@ -42,7 +49,15 @@ public class MenuPokemon {
             return null;
         }
 
-        return pokemonService.consultarPokemon(numStr);
+        try {
+            return pokemonService.consultarPokemon(numStr);
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            return null;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro inesperado: " + e.getMessage());
+            return null;
+        }
     }
 
     public void alterarPokemon(){
