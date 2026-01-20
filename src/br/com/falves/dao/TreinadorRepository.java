@@ -2,9 +2,8 @@
  * @author falvesmac
  */
 
-package br.com.falves.repository;
+package br.com.falves.dao;
 
-import br.com.falves.dao.ITreinadorDAO;
 import br.com.falves.domain.Treinador;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;

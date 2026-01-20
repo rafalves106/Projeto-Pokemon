@@ -2,9 +2,8 @@
  * @author falvesmac
  */
 
-package br.com.falves.repository;
+package br.com.falves.dao;
 
-import br.com.falves.dao.IPokemonDAO;
 import br.com.falves.domain.EspeciePokemon;
 import br.com.falves.domain.Pokemon;
 import br.com.falves.domain.TipoPokemon;

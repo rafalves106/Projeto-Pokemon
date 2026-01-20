@@ -2,7 +2,7 @@ package br.com.falves.service;
 
 import br.com.falves.domain.EspeciePokemon;
 import br.com.falves.domain.Pokemon;
-import br.com.falves.repository.PokemonRepository;
+import br.com.falves.dao.PokemonRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

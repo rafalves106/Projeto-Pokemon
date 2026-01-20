@@ -7,9 +7,7 @@ package br.com.falves.service;
 import br.com.falves.domain.EspeciePokemon;
 import br.com.falves.domain.Pokemon;
 import br.com.falves.domain.TipoPokemon;
-import br.com.falves.repository.PokemonRepository;
-
-import javax.swing.*;
+import br.com.falves.dao.PokemonRepository;
 
 public class PokemonService {
     private PokemonRepository pokemonRepository;

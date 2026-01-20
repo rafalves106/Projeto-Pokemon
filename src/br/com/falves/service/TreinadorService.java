@@ -8,8 +8,8 @@ import br.com.falves.domain.Pokemon;
 import br.com.falves.domain.Regioes;
 import br.com.falves.domain.StatusPokemon;
 import br.com.falves.domain.Treinador;
-import br.com.falves.repository.PokemonRepository;
-import br.com.falves.repository.TreinadorRepository;
+import br.com.falves.dao.PokemonRepository;
+import br.com.falves.dao.TreinadorRepository;
 
 public class TreinadorService {
     private TreinadorRepository treinadorRepository;
