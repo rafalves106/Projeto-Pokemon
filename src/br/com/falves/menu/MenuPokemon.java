@@ -7,7 +7,7 @@ import br.com.falves.domain.Pokemon;
 import br.com.falves.service.PokemonService;
 
 import javax.swing.*;
-
+/**
 public class MenuPokemon {
     PokemonService pokemonService = new PokemonService();
 
@@ -244,3 +244,4 @@ public class MenuPokemon {
         }
     }
 }
+ **/

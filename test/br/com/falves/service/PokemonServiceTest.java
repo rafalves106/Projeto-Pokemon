@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 class PokemonServiceTest {
     PokemonService pokemonService;
-    PokemonRepository pokemonRepository = new PokemonRepository("projeto-pokemon-test");
+    static final PokemonRepository pokemonRepository = new PokemonRepository("projeto-pokemon-test");
 
     Pokemon pokemon;
 
@@ -30,14 +30,17 @@ class PokemonServiceTest {
 
     @AfterAll
     public static void after(){
-        PokemonRepository pokemonRepository = new PokemonRepository();
         pokemonRepository.limparTabela();
     }
 
     @Test
     void deveCadastrarPokemonComDadosValidos() {
-        String dados = "2,Mew,1";
-        pokemonService.cadastrarPokemon(dados);
+        Pokemon pokemon1 = Pokemon.builder()
+                .numero(2L)
+                .especiePokemon(EspeciePokemon.PARAS)
+                .nivel(60)
+                .build();
+        pokemonService.cadastrarPokemon(pokemon1);
         Pokemon pokemonConsultado = pokemonService.consultarPokemon("2");
 
         Assertions.assertEquals(2L, pokemonConsultado.getNumero());
@@ -45,18 +48,26 @@ class PokemonServiceTest {
 
     @Test
     void naoDeveCadastrarPokemonComDadosInvalidos() {
+        Pokemon pokemon1 = Pokemon.builder()
+                        .numero(2L)
+                                .nivel(20)
+                                        .build();
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            pokemonService.cadastrarPokemon("2,1");;
+            pokemonService.cadastrarPokemon(pokemon1);;
         });
     }
 
     @Test
     public void naoDeveCadastrarPokemonComMesmoNumero() {
-        String dados = "1,Mew,1";
+        Pokemon pokemon1 = Pokemon.builder()
+                .numero(1L)
+                .especiePokemon(EspeciePokemon.PARAS)
+                .nivel(60)
+                .build();
 
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            pokemonService.cadastrarPokemon(dados);
+            pokemonService.cadastrarPokemon(pokemon1);
         });
     }
 

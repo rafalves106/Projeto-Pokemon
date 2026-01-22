@@ -21,30 +21,13 @@ public class PokemonService {
     }
 
     // CREATE - CADASTRA POKÉMON
-    public void cadastrarPokemon(String dados) {
-
-        if (dados == null) {
-            throw new IllegalArgumentException("Dados inválidos.");
-        }
+    public void cadastrarPokemon(Pokemon pokemon) {
 
         try {
-            String[] dadosSeparados = dados.split(",");
-
-            if (dadosSeparados.length != 3) {
-                throw new IllegalArgumentException("Dados Incorretos! Padrão: NÚMERO, ESPÉCIE, NÍVEL");
-            }
-
-            Long num = Long.parseLong(dadosSeparados[0]);
-            String especieStr = dadosSeparados[1].trim().toUpperCase();
-            EspeciePokemon especie = EspeciePokemon.valueOf(especieStr);
-            Integer nivel = Integer.parseInt(dadosSeparados[2]);
-
-            Pokemon pokemon = Pokemon.builder().numero(num).especiePokemon(especie).nivel(nivel).build();
-
             Boolean isCadastrado = pokemonRepository.cadastrar(pokemon);
 
             if (!isCadastrado) {
-                throw new IllegalArgumentException("Pokémon com NUM " + num + " já existe!");
+                throw new IllegalArgumentException("Pokémon com NUM " + pokemon.getNumero() + " já existe!");
             }
 
         } catch (NumberFormatException e) {

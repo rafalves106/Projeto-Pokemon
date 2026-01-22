@@ -26,50 +26,15 @@ public class TreinadorService {
     }
 
     // CREATE - CADASTRA TREINADOR
-    public void cadastrarTreinador(String dados){
-        // SE OS DADOS INSERIDOS ESTIVEREM VAZIOS RETORNA ERRO
-        if(dados == null){
-            throw new IllegalArgumentException("Dados inválidos.");
-        }
-
+    public void cadastrarTreinador(Treinador treinador){
         // TENTA
         try {
-            // SEPARAR OS DADOS A CADA VIRGULA
-            String[] dadosSeparados = dados.split(",");
-
-            // VERIFICA SE OS DADOS SEPARADOS É DIFERENTE DE 5, SE FOR RETORNA ERRO
-            if (dadosSeparados.length != 5){
-                throw new IllegalArgumentException("Quantidade de dados incorreta! Padrão: ID,NOME,REGIÃO,IDADE,INSÍGNIAS");
-            }
-
-            // SEPARA OS DADOS EM VARIÁVEIS DIVERSAS
-            Long id = Long.parseLong(dadosSeparados[0]);
-            String nome = dadosSeparados[1].trim();
-            String regiao = dadosSeparados[2].trim();
-            Integer idade = Integer.parseInt(dadosSeparados[3].trim());
-            Integer insignias = Integer.parseInt(dadosSeparados[4].trim());
-
-            Regioes regiaoFormatada = Regioes.valueOf(regiao.toUpperCase());
-
-            if (insignias > 8 || insignias < 0){
-                throw new IllegalArgumentException("Quantidade de insígnias maior que o possível. Min: 0 - Máx: 8.");
-            }
-
-            // CRIA UM NOVO TREINADOR NO MAP COM OS DADOS COLETADOS
-            Treinador treinadorParaCadastro = Treinador.builder()
-                    .id(id)
-                    .nome(nome)
-                    .regiao(regiaoFormatada)
-                    .idade(idade)
-                    .insignias(insignias)
-                    .build();
-
             // VARIÁVEL COM A VERIFICAÇÃO SE FOI CADASTRADO OU NÃO
-            Boolean isCadastrado = treinadorRepository.cadastrar(treinadorParaCadastro);
+            Boolean isCadastrado = treinadorRepository.cadastrar(treinador);
 
             // SE FOR FALSE, RETORNA UM ERRO
             if(!isCadastrado) {
-                throw new IllegalArgumentException("Treinador com ID " + id + " já existe!");
+                throw new IllegalArgumentException("Treinador com ID " + treinador.getId() + " já existe!");
             }
 
         // CAPTURA ERRO DE ARGUMENTOS NUMERAIS INVÁLIDOS

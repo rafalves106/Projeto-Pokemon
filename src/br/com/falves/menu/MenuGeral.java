@@ -5,7 +5,7 @@
 package br.com.falves.menu;
 
 import javax.swing.*;
-
+/**
 public class MenuGeral {
     private static final MenuPokemon menuPokemon = new MenuPokemon();
     private static final MenuTreinador menuTreinador = new MenuTreinador();
@@ -43,4 +43,4 @@ public class MenuGeral {
         JOptionPane.showMessageDialog(null, sair);
         System.exit(0);
     }
-}
+}**/

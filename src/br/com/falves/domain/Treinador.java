@@ -5,6 +5,7 @@
 package br.com.falves.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.Where;
 
@@ -23,11 +24,25 @@ public class Treinador {
 
     @Id
     @EqualsAndHashCode.Include
+    @NotNull(message = "O id do treinador não pode ser nulo.")
     private Long id;
+
+    @NotNull(message = "O nome do treinador não pode ser nulo.")
+    @Column(nullable = false)
     private String nome;
+
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @NotNull(message = "A região do treinador não pode estar vazia.")
     private Regioes regiao;
-    private Integer idade, insignias;
+
+    @Column(nullable = false)
+    @NotNull(message = "A idade do treinador não pode estar vazia.")
+    private Integer idade;
+
+    @Column(nullable = false)
+    @NotNull(message = "As insígnias do treinador não pode estar vazia.")
+    private Integer insignias;
 
     @OneToMany(mappedBy = "treinador", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Where(clause = "status = 'EQUIPE'")

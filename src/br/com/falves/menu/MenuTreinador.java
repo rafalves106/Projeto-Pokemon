@@ -8,7 +8,7 @@ import br.com.falves.domain.Treinador;
 import br.com.falves.service.TreinadorService;
 
 import javax.swing.*;
-
+/**
 public class MenuTreinador {
    TreinadorService treinadorService = new TreinadorService();
 
@@ -240,3 +240,4 @@ public class MenuTreinador {
         }
     }
 }
+ **/

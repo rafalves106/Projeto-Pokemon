@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 
 class TreinadorServiceTest {
     TreinadorService treinadorService;
-    TreinadorRepository treinadorRepository = new TreinadorRepository("projeto-pokemon-test");;
-    PokemonRepository pokemonRepository = new PokemonRepository("projeto-pokemon-test");
+    static final TreinadorRepository treinadorRepository = new TreinadorRepository("projeto-pokemon-test");
+    static final PokemonRepository pokemonRepository = new PokemonRepository("projeto-pokemon-test");
 
     Pokemon pokemon;
     Treinador treinador;
@@ -44,14 +44,21 @@ class TreinadorServiceTest {
 
     @AfterAll
     public static void after(){
-        TreinadorRepository treinadorRepository = new TreinadorRepository();
+        TreinadorRepository treinadorRepository = new TreinadorRepository("projeto-pokemon-test");
         treinadorRepository.limparTabela();
     }
 
     @Test
     void deveCadastrarTreinadorComDadosValidos() {
-        String dados = "2,Misty,Kanto,12,2";
-        treinadorService.cadastrarTreinador(dados);
+        Treinador treinador1 = Treinador.builder()
+                        .id(2L)
+                        .nome("Misty")
+                        .regiao(Regioes.KANTO)
+                        .idade(12)
+                        .insignias(2)
+                        .build();
+
+        treinadorService.cadastrarTreinador(treinador1);
         Treinador treinadorConsultado = treinadorService.consultarTreinador("2");
 
         Assertions.assertEquals(2L, treinadorConsultado.getId());
@@ -59,8 +66,15 @@ class TreinadorServiceTest {
 
     @Test
     void naoDeveCadastrarComDadosInvalidos() {
+        Treinador treinador1 = Treinador.builder()
+                .id(2L)
+                .regiao(Regioes.KANTO)
+                .idade(12)
+                .insignias(2)
+                .build();
+
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            treinadorService.cadastrarTreinador("2,Misty");
+            treinadorService.cadastrarTreinador(treinador1);
         });
     }
 
